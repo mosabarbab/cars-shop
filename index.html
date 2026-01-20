@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AutoHub - Premium Car Marketplace</title>
+  <meta name="description" content="Buy and sell premium new & used cars with direct seller contact. Smart, secure, and seamless." />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    :root {
+      --primary: #1e40af;
+      --primary-light: #3b82f6;
+      --secondary: #facc15;
+      --text: #1e293b;
+      --text-light: #64748b;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --border: #e2e8f0;
+      --success: #10b981;
+      --danger: #ef4444;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      --radius: 12px;
+      --transition: all 0.3s ease;
+    }
+
+    [dir="rtl"] {
+      font-family: 'Cairo', sans-serif;
+    }
+    [dir="ltr"] {
+      font-family: 'Inter', sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      scroll-behavior: smooth;
+      transition: var(--transition);
+    }
+
+    /* Navbar */
+    nav {
+      background: rgba(30, 64, 175, 0.95);
+      backdrop-filter: blur(12px);
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .logo {
+      font-weight: 700;
+      font-size: 1.5rem;
+      letter-spacing: -0.5px;
+    }
+
+    nav ul {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+      position: relative;
+    }
+
+    nav ul li a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--secondary);
+      transition: var(--transition);
+    }
+
+    nav ul li a:hover::after {
+      width: 100%;
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 0.95rem;
+    }
+
+    .btn-primary {
+      background: var(--secondary);
+      color: #1e293b;
+    }
+
+    .btn-primary:hover {
+      background: #f59e0b;
+      transform: translateY(-2px);
+    }
+
+    .btn-lang {
+      background: transparent;
+      color: white;
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .hamburger {
+      display: none;
+      font-size: 1.6rem;
+      cursor: pointer;
+    }
+
+    /* Hero */
+    header {
+      text-align: center;
+      padding: 4rem 2rem;
+      background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    header h1 {
+      font-size: 2.8rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(to right, var(--primary), var(--primary-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 700;
+    }
+
+    header p {
+      font-size: 1.2rem;
+      color: var(--text-light);
+      max-width: 600px;
+      margin: 0 auto 2rem;
+    }
+
+    #car3D {
+      width: 100%;
+      max-width: 500px;
+      height: 350px;
+      margin: 2rem auto;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      background: #fff;
+    }
+
+    /* Main */
+    main {
+      padding: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    section {
+      margin-bottom: 4rem;
+    }
+
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      color: var(--primary);
+      position: relative;
+      display: inline-block;
+    }
+
+    h2::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 60px;
+      height: 4px;
+      background: var(--secondary);
+      border-radius: 2px;
+    }
+
+    /* Filters */
+    .filter-section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      background: var(--card);
+      padding: 1.5rem;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .filter-section input,
+    .filter-section select {
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      flex: 1;
+      min-width: 150px;
+    }
+
+    /* Cars Grid */
+    .cars-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .car-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .car-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.12);
+    }
+
+    .car-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .car-info {
+      padding: 1rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .car-info h3 {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+    }
+
+    .car-info p {
+      color: var(--text-light);
+      font-size: 0.9rem;
+      margin: 0.25rem 0;
+    }
+
+    .price {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-top: auto;
+      padding-top: 0.75rem;
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .btn-sm {
+      flex: 1;
+      padding: 0.5rem;
+      font-size: 0.85rem;
+      border-radius: 6px;
+    }
+
+    .btn-details {
+      background: #f1f5f9;
+      color: var(--text);
+    }
+
+    .btn-contact {
+      background: var(--primary);
+      color: white;
+    }
+
+    /* Payment */
+    .payment-section {
+      background: #fefce8;
+      border: 1px solid #fde68a;
+      padding: 1.5rem;
+      border-radius: var(--radius);
+      margin-top: 2rem;
+      display: none;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      padding: 1rem;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: var(--radius);
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+      animation: modalIn 0.4s ease;
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .modal-content h3 {
+      margin-bottom: 1.5rem;
+      color: var(--primary);
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      background: white;
+      color: var(--text-light);
+      font-size: 0.9rem;
+      border-top: 1px solid var(--border);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      nav ul { display: none; flex-direction: column; position: absolute; top: 70px; right: 0; background: var(--primary); width: 200px; padding: 1rem; border-radius: 8px; }
+      nav ul.show { display: flex; }
+      .hamburger { display: block; }
+      header h1 { font-size: 2.2rem; }
+      .filter-section { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav>
+    <div class="logo">AutoHub</div>
+    <div class="hamburger" id="hamburger">☰</div>
+    <ul id="navLinks">
+      <li><a href="#hero" class="nav-link">Home</a></li>
+      <li><a href="#allCars" class="nav-link">All Cars</a></li>
+      <li><a href="#about" class="nav-link">About</a></li>
+      <li><a href="#contact" class="nav-link">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="btn btn-lang" id="langBtn">عربي</button>
+      <button class="btn btn-primary" id="addCarBtn">+ Sell Car</button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <header id="hero">
+    <h1 id="heroTitle">Smart Premium Car Marketplace</h1>
+    <p id="heroDesc">Discover thousands of verified cars. Buy directly from sellers with confidence.</p>
+    <canvas id=""></canvas>
+  </header>
+
+  <main>
+    <!-- Cars Section -->
+    <section id="allCars">
+      <h2 id="allCarsTitle">All Cars</h2>
+
+      <div class="filter-section">
+        <input type="text" id="searchBrand" placeholder="Search by brand..." />
+        <input type="text" id="searchModel" placeholder="Model..." />
+        <input type="number" id="searchYear" placeholder="Year" />
+        <input type="number" id="searchMinPrice" placeholder="Min Price" />
+        <input type="number" id="searchMaxPrice" placeholder="Max Price" />
+        <button class="btn btn-primary" id="applyFilter">Apply Filter</button>
+      </div>
+
+      <div class="cars-grid" id="carsGrid"></div>
+    </section>
+
+    <!-- Payment -->
+    <section id="paymentSection" class="payment-section">
+      <h3>Complete Your Purchase</h3>
+      <p>Select payment method:</p>
+      <select id="paymentMethod" class="form-control">
+        <option value="credit">Credit Card</option>
+        <option value="paypal">PayPal</option>
+        <option value="cash">Cash on Delivery</option>
+      </select>
+      <button class="btn btn-primary" style="margin-top:1rem;" onclick="completePayment()">Complete Payment</button>
+    </section>
+  </main>
+
+  <!-- About -->
+  <section id="about">
+    <h2>About AutoHub</h2>
+    <p>AutoHub connects buyers and sellers in a trusted, intelligent marketplace. Every car is verified, and every transaction is secure.</p>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact">
+    <h2>Contact Us</h2>
+    <p>Email: <a href="mailto:info@autohub.com">info@autohub.com</a></p>
+    <p>Phone: <a href="tel:+123456789">+1 234 567 89</a></p>
+  </section>
+
+  <footer>
+    © <span id="year"></span> AutoHub. All rights reserved.
+  </footer>
+
+  <!-- Sell Car Modal -->
+  <div class="modal" id="sellModal">
+    <div class="modal-content">
+      <h3 id="modalTitle">Sell Your Car</h3>
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" id="carTitle" />
+      </div>
+      <div class="form-group">
+        <label>Brand</label>
+        <input type="text" id="carBrand" />
+      </div>
+      <div class="form-group">
+        <label>Model</label>
+        <input type="text" id="carModel" />
+      </div>
+      <div class="form-group">
+        <label>Year</label>
+        <input type="number" id="carYear" min="1900" max="2026" />
+      </div>
+      <div class="form-group">
+        <label>Price ($)</label>
+        <input type="number" id="carPrice" />
+      </div>
+      <div class="form-group">
+        <label>Mileage (km)</label>
+        <input type="text" id="carMileage" />
+      </div>
+      <div class="form-group">
+        <label>Image URL</label>
+        <input type="url" id="carImage" placeholder="https://example.com/car.jpg" />
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea id="carDescription" rows="3"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-primary" id="submitCar">Submit</button>
+        <button class="btn" id="closeModal">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+  <script>
+    // Elements
+    const elements = {
+      carsGrid: document.getElementById('carsGrid'),
+      sellModal: document.getElementById('sellModal'),
+      addCarBtn: document.getElementById('addCarBtn'),
+      closeModal: document.getElementById('closeModal'),
+      submitCar: document.getElementById('submitCar'),
+      year: document.getElementById('year'),
+      paymentSection: document.getElementById('paymentSection'),
+      hamburger: document.getElementById('hamburger'),
+      navLinks: document.getElementById('navLinks'),
+      langBtn: document.getElementById('langBtn'),
+      applyFilter: document.getElementById('applyFilter'),
+      navLinkItems: document.querySelectorAll('.nav-link'),
+      heroTitle: document.getElementById('heroTitle'),
+      heroDesc: document.getElementById('heroDesc'),
+      allCarsTitle: document.getElementById('allCarsTitle'),
+      modalTitle: document.getElementById('modalTitle'),
+    };
+
+    // Data
+    let lang = 'en';
+    let cars = [];
+    let selectedCarIndex = null;
+
+    // Translations
+    const translations = {
+      en: {
+        heroTitle: "Smart Premium Car Marketplace",
+        heroDesc: "Discover thousands of verified cars. Buy directly from sellers with confidence.",
+        allCarsTitle: "All Cars",
+        modalTitle: "Sell Your Car",
+        addCar: "+ Sell Car",
+        langBtn: "عربي",
+        completePayment: "Complete Payment",
+        paymentSuccess: "Payment successful! Thank you for your purchase."
+      },
+      ar: {
+        heroTitle: "سوق السيارات الذكي المتميز",
+        heroDesc: "اكتشف آلاف السيارات الموثقة. اشترِ مباشرة من البائعين بثقة تامة.",
+        allCarsTitle: "جميع السيارات",
+        modalTitle: "بيع سيارتك",
+        addCar: "+ بيع سيارة",
+        langBtn: "English",
+        completePayment: "إكمال الدفع",
+        paymentSuccess: "تم الدفع بنجاح! شكرًا لشرائك."
+      }
+    };
+
+    // Set Year
+    elements.year.textContent = new Date().getFullYear();
+
+    // Language Toggle
+    elements.langBtn.onclick = () => {
+      lang = lang === 'en' ? 'ar' : 'en';
+      document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+      document.documentElement.lang = lang;
+
+      // Update texts
+      const t = translations[lang];
+      elements.heroTitle.textContent = t.heroTitle;
+      elements.heroDesc.textContent = t.heroDesc;
+      elements.allCarsTitle.textContent = t.allCarsTitle;
+      elements.modalTitle.textContent = t.modalTitle;
+      elements.addCarBtn.textContent = t.addCar;
+      elements.langBtn.textContent = t.langBtn;
+      document.querySelector('[onclick="completePayment()"]').textContent = t.completePayment;
+
+      renderCars();
+    };
+
+    // Render Cars
+    function renderCars(filtered = null) {
+      const display = filtered || cars;
+      elements.carsGrid.innerHTML = '';
+      display.forEach((car, i) => {
+        const card = document.createElement('div');
+        card.className = 'car-card';
+        card.innerHTML = `
+          <img src="${car.image}" alt="${car.title}" onerror="this.src='https://via.placeholder.com/300x180?text=No+Image'">
+          <div class="car-info">
+            <h3>${car.title}</h3>
+            <p>${car.brand} • ${car.model} • ${car.year}</p>
+            <p>${car.mileage}</p>
+            <p class="price">$${parseInt(car.price).toLocaleString()}</p>
+            <div class="actions">
+              <button class="btn btn-sm btn-details" onclick="showDetails(${i})">
+                <i class="fas fa-eye"></i> Details
+              </button>
+              <button class="btn btn-sm btn-contact" onclick="selectCar(${i})">
+                <i class="fas fa-shopping-cart"></i> Buy Now
+              </button>
+            </div>
+          </div>
+        `;
+        elements.carsGrid.appendChild(card);
+      });
+    }
+
+    // Show Details
+    window.showDetails = (i) => {
+      const car = cars[i];
+      alert(`${car.title}\n${car.description}\nPrice: $${car.price}\nMileage: ${car.mileage}`);
+    };
+
+    // Select Car
+    window.selectCar = (i) => {
+      selectedCarIndex = i;
+      alert(`Selected: ${cars[i].title}`);
+      elements.paymentSection.style.display = 'block';
+      elements.paymentSection.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    // Complete Payment
+    window.completePayment = () => {
+      const t = translations[lang];
+      alert(t.paymentSuccess);
+      elements.paymentSection.style.display = 'none';
+    };
+
+    // Modal Controls
+    elements.addCarBtn.onclick = () => elements.sellModal.style.display = 'flex';
+    elements.closeModal.onclick = () => elements.sellModal.style.display = 'none';
+    window.onclick = (e) => { if (e.target === elements.sellModal) elements.sellModal.style.display = 'none'; };
+
+    // Submit Car
+    elements.submitCar.onclick = () => {
+      const inputs = {
+        title: document.getElementById('carTitle').value.trim(),
+        brand: document.getElementById('carBrand').value.trim(),
+        model: document.getElementById('carModel').value.trim(),
+        year: document.getElementById('carYear').value,
+        price: document.getElementById('carPrice').value,
+        mileage: document.getElementById('carMileage').value.trim(),
+        image: document.getElementById('carImage').value.trim(),
+        description: document.getElementById('carDescription').value.trim(),
+      };
+
+      if (Object.values(inputs).every(v => v)) {
+        cars.unshift(inputs);
+        renderCars();
+        elements.sellModal.style.display = 'none';
+        document.querySelectorAll('#sellModal input, #sellModal textarea').forEach(i => i.value = '');
+        alert('Car added successfully!');
+      } else {
+        alert('Please fill all fields.');
+      }
+    };
+
+    // Hamburger
+    elements.hamburger.onclick = () => elements.navLinks.classList.toggle('show');
+    elements.navLinkItems.forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 768) elements.navLinks.classList.remove('show');
+      });
+    });
+
+    // Filters
+    elements.applyFilter.onclick = () => {
+      const filters = {
+        brand: document.getElementById('searchBrand').value.toLowerCase(),
+        model: document.getElementById('searchModel').value.toLowerCase(),
+        year: document.getElementById('searchYear').value,
+        min: document.getElementById('searchMinPrice').value,
+        max: document.getElementById('searchMaxPrice').value,
+      };
+
+      const filtered = cars.filter(c => 
+        (!filters.brand || c.brand.toLowerCase().includes(filters.brand)) &&
+        (!filters.model || c.model.toLowerCase().includes(filters.model)) &&
+        (!filters.year || c.year == filters.year) &&
+        (!filters.min || c.price >= filters.min) &&
+        (!filters.max || c.price <= filters.max)
+      );
+
+      renderCars(filtered);
+    };
+
+    // 3D Car Model (GLTF)
+    const canvas = document.getElementById('car3D');
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xf8fafc);
+    const camera = new THREE.PerspectiveCamera(50, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+    renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    scene.add(ambientLight);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    directionalLight.position.set(10, 10, 5);
+    scene.add(directionalLight);
+
+    camera.position.set(0, 2, 6);
+
+    let carModel;
+    const loader = new THREE.GLTFLoader();
+    loader.load(
+      'https://threejs.org/examples/models/gltf/SciFiHelmet/SciFiHelmet.gltf',
+      (gltf) => {
+        carModel = gltf.scene;
+        carModel.scale.set(2, 2, 2);
+        scene.add(carModel);
+      },
+      undefined,
+      () => {
+        const geometry = new THREE.BoxGeometry(2, 1, 3);
+        const material = new THREE.MeshStandardMaterial({ color: 0x1e40af });
+        carModel = new THREE.Mesh(geometry, material);
+        scene.add(carModel);
+      }
+    );
+
+    function animate() {
+      requestAnimationFrame(animate);
+      if (carModel) carModel.rotation.y += 0.005;
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    window.addEventListener('resize', () => {
+      camera.aspect = canvas.clientWidth / canvas.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+    });
+  </script>
+</body>
+</html>

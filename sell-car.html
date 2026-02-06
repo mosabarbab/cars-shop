@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بيع سيارتك | سوق السيارات - بيع سيارتك بكل سهولة</title>
+    <meta name="description" content="بيع سيارتك بكل سهولة وأمان على سوق السيارات - أكبر منصة لبيع السيارات في الوطن العربي">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- خطوط عربية -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Dropzone for image upload -->
+    <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+    
+    <style>
+        * {
+            font-family: 'Almarai', sans-serif;
+        }
+        
+        .sell-hero {
+            background: linear-gradient(135deg, 
+                rgba(16, 185, 129, 0.9) 0%, 
+                rgba(5, 150, 105, 0.9) 100%),
+                url('https://images.unsplash.com/photo-1486006920555-c77dcf18193c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .step-indicator {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .step-indicator::before {
+            content: '';
+            position: absolute;
+            top: 24px;
+            right: 50%;
+            width: 100%;
+            height: 2px;
+            background-color: #e5e7eb;
+            z-index: -1;
+        }
+        
+        .step-indicator:last-child::before {
+            display: none;
+        }
+        
+        .step-indicator.active::before {
+            background-color: #10b981;
+        }
+        
+        .dropzone {
+            border: 2px dashed #d1d5db !important;
+            border-radius: 12px !important;
+            background: #f9fafb !important;
+            min-height: 200px !important;
+            padding: 40px !important;
+        }
+        
+        .dropzone:hover {
+            border-color: #10b981 !important;
+            background: #f0fdf4 !important;
+        }
+        
+        .dz-preview {
+            margin: 8px !important;
+            border-radius: 8px !important;
+            overflow: hidden !important;
+        }
+        
+        .dz-image img {
+            width: 120px !important;
+            height: 90px !important;
+            object-fit: cover !important;
+        }
+        
+        .feature-checkbox:checked {
+            background-color: #10b981 !important;
+            border-color: #10b981 !important;
+        }
+        
+        .feature-checkbox:checked::before {
+            content: '✓';
+            color: white;
+            position: absolute;
+            right: 4px;
+            top: 1px;
+            font-weight: bold;
+        }
+        
+        .preview-card {
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .preview-card:hover {
+            border-color: #10b981;
+            transform: translateY(-5px);
+        }
+        
+        .required-field::after {
+            content: ' *';
+            color: #ef4444;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    
+    <!-- شريط التنقل -->
+    <nav class="bg-white shadow-lg sticky top-0 w-full z-50">
+        <!-- نفس كود navbar من index.html -->
+    </nav>
+    
+    <!-- قسم البطل -->
+    <div class="sell-hero text-white py-16">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-6">بيع سيارتك بكل سهولة</h1>
+            <p class="text-xl mb-8 max-w-2xl mx-auto">أضف إعلانك مجاناً ووصل إلى آلاف المشترين المحتملين في دقائق</p>
+            
+            <div class="flex flex-wrap justify-center gap-8 mb-12">
+                <div class="text-center">
+                    <div class="text-3xl font-bold mb-2">15 مليون+</div>
+                    <div class="text-green-200">زائر شهرياً</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold mb-2">98.7%</div>
+                    <div class="text-green-200">رضا البائعين</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold mb-2">3 دقائق</div>
+                    <div class="text-green-200">متوسط وقت النشر</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- عملية البيع -->
+    <main class="py-12">
+        <div class="container mx-auto px-4 max-w-6xl">
+            <!-- مؤشر الخطوات -->
+            <div class="mb-12">
+                <div class="flex justify-between items-center relative">
+                    <div class="step-indicator flex flex-col items-center flex-1">
+                        <div class="w-12 h-12 rounded-full bg-green-500 text-white flex items-center justify-center font-bold mb-2">
+                            1
+                        </div>
+                        <span class="font-bold text-green-600">معلومات السيارة</span>
+                    </div>
+                    
+                    <div class="step-indicator flex flex-col items-center flex-1">
+                        <div class="w-12 h-12 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center font-bold mb-2">
+                            2
+                        </div>
+                        <span class="font-bold text-gray-500">المواصفات</span>
+                    </div>
+                    
+                    <div class="step-indicator flex flex-col items-center flex-1">
+                        <div class="w-12 h-12 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center font-bold mb-2">
+                            3
+                        </div>
+                        <span class="font-bold text-gray-500">الصور</span>
+                    </div>
+                    
+                    <div class="step-indicator flex flex-col items-center flex-1">
+                        <div class="w-12 h-12 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center font-bold mb-2">
+                            4
+                        </div>
+                        <span class="font-bold text-gray-500">التأكيد</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- نموذج بيع السيارة -->
+            <form id="sell-car-form" class="bg-white rounded-2xl shadow-xl p-8">
+                <!-- الخطوة 1: معلومات السيارة -->
+                <div class="step-content active" id="step-1">
+                    <h2 class="text-2xl font-bold mb-8 text-gray-800">معلومات السيارة الأساسية</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- الماركة -->
+                        <div>
+                            <label class="block font-bold mb-3 text-gray-700 required-field">الماركة</label>
+                            <select class="w-full p-4 border rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500" required>
+                                <option value="">اختر الماركة</option>
+                                <option value="toyota">تويوتا</option>
+                                <option value="honda">هوندا</option>
+                                <option value="nissan">نيسان</option>
+                                <option value="bmw">بي إم دبليو</option>
+                                <option value="mercedes">مرسيدس</option>
+                                <option value="hyundai">هيونداي</option>
+                                <option value="kia">كيا</option>
+                                <option value="lexus">لكزس</option>
+                                <option value="audi">أودي</option>
+                                <option value="ford">فورد</option>
+                                <option value="chevrolet">شيفروليه</option>
+                                <option value="mitsubishi">ميتسوبيشي</option>
+                            </select>
+                        </div>
+                        
+                        <!-- الموديل -->
+                        <div>
+                            <label class="block font-bold mb-3 text-gray-700 required-field">الموديل</label>
+                            <input type="text" class="w-full p-4 border rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500" 
+                                   placeholder="مثال: كامري, كورولا, X5" required>
+                        </div>
+                        
+                        <!-- السنة -->
+                        <div>
+                            <label class="block font-bold mb-3 text-gray-700 required-field">سنة الصنع</label>
+                            <select class="w-full p-4 border rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500" required>
+                                <option value="">اختر السنة</option>
+                                <option value="2024">2024</option>
+                                <option value="2023">2023</option>
+                                <option value="2022">2022</option>
+                                <option value="2021">2021</option>
+                                <option value="2020">2020</option>
+                                <option value="2019">2019</option>
+                                <option value="2018">2018</option>
+                                <option value="2017">2017</option>
+                                <option value="2016">2016</option>
+                                <option value="2015">2015</option>
+                                <option value="2014">2014</option>
+                                <option value="2013">2013</option>
+                                <option value="2012">2012</option>
+                                <option value="2011">2011</option>
+                                <option value="2010">2010</option>
+                            </select>
+                        </div>
+                        
+                        <!-- المسافة المقطوعة -->
+                        <div>
+                            <label class="block font-bold mb-3 text-gray-700 required-field">المسافة المقطوعة (كم)</label>
+                            <input type="number" class="w-full p-4 border rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500" 
+                                   placeholder="مثال: 50000" min="0" required>
+                        </div>
+                        
+                        <!-- حالة السيارة -->
+                        <div>
+                            <label class="block font-bold mb-3 text-gray-700 required-field">حالة السيارة</label>
+                            <select class="w-full p-4 border rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500" required>
+                                <option value="">اختر الحالة</option>
+                                <option value="new">جديدة</option>
+                                <option value="used">مستعملة</option>
+                                <option value="agency">وكالة</option>
+                                <option value="damaged">تالفة</option>
+                            </select>
+                        </div>
+                        
+                        <!-- السعر المتوقع -->
+                        <div>
+                            <label class="block font-bold mb-3 text-gray-700 required-field">السعر المتوقع (ريال)</label>
+                            <input type="number" class="w-full p-4 border rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500" 
+                                   placeholder="مثال: 85000" min="0" required>
+                        </div>
+                    </div>
+                    
+                    <!-- زر التالي -->
+                    <div class="flex justify-end mt-12">
+                        <button type="button" class="next-step bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl font-bold text-lg transition">
+                            التالي <i class="fas fa-arrow-left ml-3"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- الخطوة 2: المواصفات -->
+                <div class="step-content hidden" id="step-2">
+                    <h2 class="text-2xl font-bold mb-8 text-gray-800">مواصفات السيارة</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- نوع الوقود -->
+                        <div>
+                            <label class="block font-bold mb-3 text-gray-700 required-field">نوع الوقود</label>
+                            <select class="w-full p-4 border rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500" required>
+                                <option value="">اختر نوع الوقود</option>
+                                <option value="gasoline">بنزين</option>
+                                <option value="diesel">ديزل</option>
+                                <option value="electric">كهرباء</option>
+                                <option value="hybrid">هايبرد</option>
+                            </select>
+                        </div>
+                        
+                        <!-- نوع الناقل -->
+                        <div>
+                            <label class="block font-bold mb-3 text-gray-700 required-field">نوع الناقل</label>
+                            <select class="w-full p-4 border rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500" required>
+                                <option value="">اختر نوع الناقل</option>
+                                <option value="automatic">أوتوماتيك</option>
+                                <option value="manual">عادي</option>
+                            </select>
+                        </div>
+                        
+                        <!-- عدد السلندرات -->
+                        <div>
+                            <label class="block font-bold mb-3 text-gray-700">عدد السلندرات</label>
+                            <select class="w-full p-4 border rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                                <option value="">اختر عدد السلندرات</option>
+                                <option value="4">4 سلندرات</option>
+                                <option value="6">6 سلندرات</option>
+                                <option value="8">8 سلندرات</option>
+                            </select>
+                        </div>
+                        
+                        <!-- اللون -->
+                        <div>
+                            <label class="block font-bold mb-3 text-gray-700 required-field">اللون</label>
+                            <select class="w-full p-4 border rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500" required>
+                                <option value="">اختر اللون</option>
+                                <option value="white">أبيض</option>
+                                <option value="black">أسود</option>
+                                <option value="silver">فضي</option>
+                                <option value="gray">رمادي</option>
+                                <option value="blue">أزرق</option>
+                                <option value="red">أحمر</option>
+                                <option value="green">أخضر</option>
+                                <option value="brown">بني</option>
+                                <option value="gold">ذهبي</option>
+                            </select>
+                        </div>
+                        
+                        <!-- المميزات -->
+                        <div class="md:col-span-2">
+                            <label class="block font-bold mb-4 text-gray-700">مميزات السيارة</label>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <label class="flex items-center cursor-pointer">
+                                    <input type="checkbox" class="feature-checkbox h-6 w-6 rounded border-gray-300">
+                                    <span class="mr-3">تكييف</span>
+                                </label>
+                                <label class="flex items-center cursor-pointer">
+                                    <input type="checkbox" class="feature-checkbox h-6 w-6 rounded border-gray-300">
+                                    <span class="mr-3">شاشة لمس</span>
+                                </label>
+                                <label class="flex items-center cursor-pointer">
+                                    <input type="checkbox" class="feature-checkbox h-6 w-6 rounded border-gray-300">
+                                    <span class="mr-3">كاميرا خلفية</span>
+                                </label>
+                                <label class="flex items-center cursor-pointer">
+                                    <input type="checkbox" class="feature-checkbox h-6 w-6 rounded border-gray-300">
+                                    <span class="mr-3">مثبت سرعة</span>
+                                </label>
+                                <label class="flex items-center cursor-pointer">
+                                    <input type="checkbox" class="feature-checkbox h-6 w-6 rounded border-gray-300">
+                                    <span class="mr-3">فتحة سقف</span>
+                                </label>
+                                <label class="flex items-center cursor-pointer">
+                                    <input type="checkbox" class="feature-checkbox h-6 w-6 rounded border-gray-300">
+                                    <span class="mr-3">جلد</span>
+                                </label>
+                                <label class="flex items-center cursor-pointer">
+                                    <input type="checkbox" class="feature-checkbox h-6 w-6 rounded border-gray-300">
+                                    <span class="mr-3">نظام صوت</span>
+                                </label>
+                                <label class="flex items-center cursor-pointer">
+                                    <input type="checkbox" class="feature-checkbox h-6 w-6 rounded border-gray-300">
+                                    <span class="mr-3">مقاعد كهربائية</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- الوصف -->
+                        <div class="md:col-span-2">
+                            <label class="block font-bold mb-3 text-gray-700 required-field">وصف السيارة</label>
+                            <textarea rows="6" class="w-full p-4 border rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500" 
+                                      placeholder="صف سيارتك بالتفصيل (الحالة، الأعطال، الصيانة، سبب البيع...)" required></textarea>
+                            <p class="text-gray-500 text-sm mt-2">كلما كان الوصف دقيقاً، زادت فرصة البيع السريع</p>
+                        </div>
+                    </div>
+                    
+                    <!-- أزرار التنقل -->
+                    <div class="flex justify-between mt-12">
+                        <button type="button" class="prev-step border border-gray-300 hover:bg-gray-50 text-gray-700 px-8 py-4 rounded-xl font-bold text-lg transition">
+                            <i class="fas fa-arrow-right mr-3"></i> السابق
+                        </button>
+                        <button type="button" class="next-step bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl font-bold text-lg transition">
+                            التالي <i class="fas fa-arrow-left ml-3"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- الخطوة 3: الصور -->
+                <div class="step-content hidden" id="step-3">
+                    <h2 class="text-2xl font-bold mb-8 text-gray-800">صور السيارة</h2>
+                    
+                    <div class="mb-8">
+                        <label class="block font-bold mb-4 text-gray-700 required-field">رفع صور السيارة</label>
+                        <p class="text-gray-600 mb-6">أضف صور واضحة للسيارة من جميع الزوايا (5 صور كحد أدنى، 15 كحد أقصى)</p>
+                        
+                        <!-- Dropzone للصور -->
+                        <div id="image-dropzone" class="dropzone">
+                            <div class="dz-message text-center">
+                                <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-4"></i>
+                                <h3 class="text-lg font-bold mb-2">اسحب وأفلت الصور هنا</h3>
+                                <p class="text-gray-500 mb-4">أو انقر للاختيار من الجهاز</p>
+                                <button type="button" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium transition">
+                                    اختيار الصور
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- نصائح للصور -->
+                        <div class="bg-blue-50 border border-blue-200 rounded-xl p-6 mt-8">
+                            <h4 class="font-bold text-blue-800 mb-3">نصائح لصور أفضل:</h4>
+                            <ul class="space-y-2 text-blue-700">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 ml-3"></i>
+                                    <span>التقاط صور في وضح النهار بضوء طبيعي</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 ml-3"></i>
+                                    <span>صور للخارج والداخل والمحرك والجنط</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 ml-3"></i>
+                                    <span>تجنب الصور المظلمة أو الضبابية</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 ml-3"></i>
+                                    <span>صور للعيوب إن وجدت (للصدق والشفافية)</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- أزرار التنقل -->
+                    <div class="flex justify-between mt-12">
+                        <button type="button" class="prev-step border border-gray-300 hover:bg-gray-50 text-gray-700 px-8 py-4 rounded-xl font-bold text-lg transition">
+                            <i class="fas fa-arrow-right mr-3"></i> السابق
+                        </button>
+                        <button type="button" class="next-step bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl font-bold text-lg transition">
+                            التالي <i class="fas fa-arrow-left ml-3"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- الخطوة 4: التأكيد -->
+                <div class="step-content hidden" id="step-4">
+                    <h2 class="text-2xl font-bold mb-8 text-gray-800">تأكيد معلومات السيارة</h2>
+                    
+                    <!-- معاينة الإعلان -->
+                    <div class="bg-gray-50 rounded-2xl p-8 mb-8">
+                        <h3 class="text-xl font-bold mb-6 text-gray-800">معاينة الإعلان</h3>
+                        
+                        <div class="preview-card bg-white rounded-xl p-6">
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                <!-- الصور -->
+                                <div>
+                                    <div class="h-48 bg-gray-200 rounded-lg mb-4"></div>
+                                    <div class="grid grid-cols-3 gap-2">
+                                        <div class="h-20 bg-gray-200 rounded"></div>
+                                        <div class="h-20 bg-gray-200 rounded"></div>
+                                        <div class="h-20 bg-gray-200 rounded"></div>
+                                    </div>
+                                </div>
+                                
+                                <!-- المعلومات -->
+                                <div>
+                                    <div class="flex justify-between items-start mb-4">
+                                        <h4 class="text-xl font-bold text-gray-800">[الماركة] [الموديل] [السنة]</h4>
+                                        <div class="text-2xl font-bold text-green-600">[السعر] ر.س</div>
+                                    </div>
+                                    
+                                    <div class="space-y-4 mb-6">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-tachometer-alt text-gray-500 ml-3"></i>
+                                            <span class="text-gray-700">[المسافة] كم</span>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <i class="fas fa-gas-pump text-gray-500 ml-3"></i>
+                                            <span class="text-gray-700">[نوع الوقود]</span>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <i class="fas fa-cog text-gray-500 ml-3"></i>
+                                            <span class="text-gray-700">[نوع الناقل]</span>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <i class="fas fa-map-marker-alt text-gray-500 ml-3"></i>
+                                            <span class="text-gray-700">[المدينة]</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="border-t pt-4">
+                                        <h5 class="font-bold mb-2">الوصف:</h5>
+                                        <p class="text-gray-600">[وصف السيارة سيظهر هنا...]</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- معلومات الاتصال -->
+                    <div class="mb-8">
+                        <h3 class="text-xl font-bold mb-6 text-gray-800">معلومات الاتصال</h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block font-bold mb-3 text-gray-700 required-field">الاسم</label>
+                                <input type="text" class="w-full p-4 border rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500" 
+                                       placeholder="اسمك الكامل" required>
+                            </div>
+                            
+                            <div>
+                                <label class="block font-bold mb-3 text-gray-700 required-field">رقم الجوال</label>
+                                <input type="tel" class="w-full p-4 border rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500" 
+                                       placeholder="05xxxxxxxx" required>
+                            </div>
+                            
+                            <div>
+                                <label class="block font-bold mb-3 text-gray-700 required-field">البريد الإلكتروني</label>
+                                <input type="email" class="w-full p-4 border rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500" 
+                                       placeholder="example@email.com" required>
+                            </div>
+                            
+                            <div>
+                                <label class="block font-bold mb-3 text-gray-700 required-field">المدينة</label>
+                                <select class="w-full p-4 border rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500" required>
+                                    <option value="">اختر المدينة</option>
+                                    <option value="riyadh">الرياض</option>
+                                    <option value="jeddah">جدة</option>
+                                    <option value="dammam">الدمام</option>
+                                    <option value="makkah">مكة المكرمة</option>
+                                    <option value="medina">المدينة المنورة</option>
+                                    <option value="other">مدينة أخرى</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- الشروط -->
+                    <div class="mb-8">
+                        <label class="flex items-start cursor-pointer">
+                            <input type="checkbox" class="feature-checkbox h-6 w-6 rounded border-gray-300 mt-1" required>
+                            <span class="mr-3 text-gray-700">
+                                أوافق على <a href="#" class="text-green-600 hover:underline">شروط الاستخدام</a> و 
+                                <a href="#" class="text-green-600 hover:underline">سياسة الخصوصية</a> لموقع سوق السيارات
+                            </span>
+                        </label>
+                    </div>
+                    
+                    <!-- أزرار التنقل -->
+                    <div class="flex justify-between">
+                        <button type="button" class="prev-step border border-gray-300 hover:bg-gray-50 text-gray-700 px-8 py-4 rounded-xl font-bold text-lg transition">
+                            <i class="fas fa-arrow-right mr-3"></i> السابق
+                        </button>
+                        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl font-bold text-lg transition">
+                            <i class="fas fa-check ml-3"></i> نشر الإعلان
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </main>
+    
+    <!-- نصائح للبيع -->
+    <section class="py-12 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">نصائح لبيع سريع وسعر أفضل</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white rounded-2xl p-8 shadow-lg">
+                    <div class="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center mb-6">
+                        <i class="fas fa-camera text-2xl text-blue-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">صور واضحة</h3>
+                    <p class="text-gray-600">أضف صوراً واضحة للسيارة من جميع الزوايا، خاصة في وضح النهار بضوء طبيعي.</p>
+                </div>
+                
+                <div class="bg-white rounded-2xl p-8 shadow-lg">
+                    <div class="w-16 h-16 bg-green-100 rounded-xl flex items-center justify-center mb-6">
+                        <i class="fas fa-search text-2xl text-green-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">وصف دقيق</h3>
+                    <p class="text-gray-600">اكتب وصفاً دقيقاً وشاملاً للسيارة، واذكر الأعطال إن وجدت للشفافية.</p>
+                </div>
+                
+                <div class="bg-white rounded-2xl p-8 shadow-lg">
+                    <div class="w-16 h-16 bg-purple-100 rounded-xl flex items-center justify-center mb-6">
+                        <i class="fas fa-tag text-2xl text-purple-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">سعر مناسب</h3>
+                    <p class="text-gray-600">حدد سعراً مناسباً بناءً على سوق السيارات ومواصفات سيارتك.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- تذييل الصفحة -->
+    <footer class="bg-gray-900 text-white pt-12 pb-8">
+        <!-- نفس كود footer من index.html -->
+    </footer>
+    
+    <!-- Dropzone JS -->
+    <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+    
+    <!-- ملفات JavaScript -->
+    <script src="js/main.js"></script>
+    <script src="js/sell-car.js"></script>
+</body>
+</html>

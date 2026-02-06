@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تصفح السيارات | سوق السيارات - بيع وشراء السيارات</title>
+    <meta name="description" content="تصفح آلاف السيارات المعروضة للبيع - تويوتا، هوندا، بي إم دبليو، مرسيدس، نيسان، هيونداي وأكثر">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- خطوط عربية -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Select2 للفلاتر -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    
+    <style>
+        * {
+            font-family: 'Almarai', sans-serif;
+        }
+        
+        .page-banner {
+            background: linear-gradient(135deg, 
+                rgba(37, 99, 235, 0.9) 0%, 
+                rgba(124, 58, 237, 0.9) 100%),
+                url('https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .filter-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-card:hover {
+            border-color: #3b82f6;
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.1);
+        }
+        
+        .car-grid-view {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+        }
+        
+        .car-list-view .car-item {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .car-list-view .car-item:hover {
+            border-color: #3b82f6;
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.1);
+        }
+        
+        .price-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(to right, #3b82f6, #8b5cf6);
+            border-radius: 4px;
+            outline: none;
+        }
+        
+        .price-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border: 3px solid #3b82f6;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        .select2-container--default .select2-selection--single {
+            border: 1px solid #d1d5db !important;
+            border-radius: 8px !important;
+            height: 48px !important;
+            padding: 10px !important;
+        }
+        
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 28px !important;
+            text-align: right !important;
+        }
+        
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 48px !important;
+            left: 8px !important;
+        }
+        
+        .pagination .page-link {
+            padding: 8px 16px;
+            margin: 0 4px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            color: #4b5563;
+            transition: all 0.3s ease;
+        }
+        
+        .pagination .page-link:hover {
+            background-color: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+        
+        .pagination .page-link.active {
+            background-color: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    
+    <!-- شريط التنقل -->
+    <nav class="bg-white shadow-lg sticky top-0 w-full z-50">
+        <!-- نفس كود navbar من index.html -->
+    </nav>
+    
+    <!-- بانر الصفحة -->
+    <div class="page-banner text-white py-20">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl">
+                <h1 class="text-4xl md:text-5xl font-bold mb-4">تصفح السيارات</h1>
+                <p class="text-xl opacity-90 mb-8">اكتشف أكثر من <span class="font-bold text-yellow-300">15,247</span> سيارة معروضة للبيع بأفضل الأسعار</p>
+                
+                <!-- شريط البحث السريع -->
+                <div class="bg-white/20 backdrop-blur-sm rounded-xl p-4">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <select class="p-3 rounded-lg bg-white/10 text-white border border-white/30">
+                            <option value="">جميع الماركات</option>
+                            <option value="toyota">تويوتا</option>
+                            <option value="honda">هوندا</option>
+                            <option value="nissan">نيسان</option>
+                        </select>
+                        <select class="p-3 rounded-lg bg-white/10 text-white border border-white/30">
+                            <option value="">جميع المدن</option>
+                            <option value="riyadh">الرياض</option>
+                            <option value="jeddah">جدة</option>
+                        </select>
+                        <select class="p-3 rounded-lg bg-white/10 text-white border border-white/30">
+                            <option value="">جميع الأسعار</option>
+                            <option value="0-50000">أقل من 50,000 ر.س</option>
+                            <option value="50000-100000">50,000 - 100,000 ر.س</option>
+                        </select>
+                        <button class="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-3 rounded-lg font-bold hover:shadow-lg transition">
+                            <i class="fas fa-search ml-2"></i>بحث
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- محتوى الصفحة -->
+    <main class="py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col lg:flex-row gap-8">
+                <!-- الفلاتر -->
+                <aside class="lg:w-1/4">
+                    <div class="filter-card rounded-2xl p-6 sticky top-24">
+                        <h3 class="text-xl font-bold mb-6 pb-4 border-b">تصفية النتائج</h3>
+                        
+                        <!-- نطاق السعر -->
+                        <div class="mb-8">
+                            <label class="block font-bold mb-4 text-gray-800">نطاق السعر (ريال)</label>
+                            <input type="range" min="0" max="1000000" value="500000" class="price-slider mb-2" id="price-slider">
+                            <div class="flex justify-between text-sm text-gray-600 mb-4">
+                                <span id="min-price">0</span>
+                                <span id="max-price">1,000,000</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <input type="number" placeholder="الحد الأدنى" class="flex-1 p-2 border rounded">
+                                <input type="number" placeholder="الحد الأقصى" class="flex-1 p-2 border rounded">
+                            </div>
+                        </div>
+                        
+                        <!-- السنة -->
+                        <div class="mb-8">
+                            <label class="block font-bold mb-3 text-gray-800">السنة</label>
+                            <select class="w-full p-3 border rounded-lg" id="year-select">
+                                <option value="">جميع السنوات</option>
+                                <option value="2024">2024</option>
+                                <option value="2023">2023</option>
+                                <option value="2022">2022</option>
+                                <option value="2021">2021</option>
+                                <option value="2020">2020</option>
+                            </select>
+                        </div>
+                        
+                        <!-- المسافة المقطوعة -->
+                        <div class="mb-8">
+                            <label class="block font-bold mb-3 text-gray-800">المسافة المقطوعة</label>
+                            <select class="w-full p-3 border rounded-lg">
+                                <option value="">أي مسافة</option>
+                                <option value="0-10000">أقل من 10,000 كم</option>
+                                <option value="10000-50000">10,000 - 50,000 كم</option>
+                                <option value="50000-100000">50,000 - 100,000 كم</option>
+                                <option value="100000+">أكثر من 100,000 كم</option>
+                            </select>
+                        </div>
+                        
+                        <!-- نوع الوقود -->
+                        <div class="mb-8">
+                            <label class="block font-bold mb-3 text-gray-800">نوع الوقود</label>
+                            <div class="space-y-2">
+                                <label class="flex items-center cursor-pointer">
+                                    <input type="checkbox" class="h-5 w-5 text-blue-600 rounded">
+                                    <span class="mr-3">بنزين</span>
+                                </label>
+                                <label class="flex items-center cursor-pointer">
+                                    <input type="checkbox" class="h-5 w-5 text-blue-600 rounded">
+                                    <span class="mr-3">ديزل</span>
+                                </label>
+                                <label class="flex items-center cursor-pointer">
+                                    <input type="checkbox" class="h-5 w-5 text-blue-600 rounded">
+                                    <span class="mr-3">كهرباء</span>
+                                </label>
+                                <label class="flex items-center cursor-pointer">
+                                    <input type="checkbox" class="h-5 w-5 text-blue-600 rounded">
+                                    <span class="mr-3">هايبرد</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- نوع الناقل -->
+                        <div class="mb-8">
+                            <label class="block font-bold mb-3 text-gray-800">نوع الناقل</label>
+                            <div class="space-y-2">
+                                <label class="flex items-center cursor-pointer">
+                                    <input type="checkbox" class="h-5 w-5 text-blue-600 rounded">
+                                    <span class="mr-3">أوتوماتيك</span>
+                                </label>
+                                <label class="flex items-center cursor-pointer">
+                                    <input type="checkbox" class="h-5 w-5 text-blue-600 rounded">
+                                    <span class="mr-3">عادي</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- حالة السيارة -->
+                        <div class="mb-8">
+                            <label class="block font-bold mb-3 text-gray-800">حالة السيارة</label>
+                            <div class="space-y-2">
+                                <label class="flex items-center cursor-pointer">
+                                    <input type="checkbox" class="h-5 w-5 text-blue-600 rounded">
+                                    <span class="mr-3">جديدة</span>
+                                </label>
+                                <label class="flex items-center cursor-pointer">
+                                    <input type="checkbox" class="h-5 w-5 text-blue-600 rounded">
+                                    <span class="mr-3">مستعملة</span>
+                                </label>
+                                <label class="flex items-center cursor-pointer">
+                                    <input type="checkbox" class="h-5 w-5 text-blue-600 rounded">
+                                    <span class="mr-3">وكالة</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <button class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg font-bold hover:shadow-lg transition mb-3">
+                            تطبيق الفلاتر
+                        </button>
+                        <button class="w-full border border-gray-300 text-gray-700 py-3 rounded-lg hover:bg-gray-50 transition">
+                            إعادة تعيين
+                        </button>
+                    </div>
+                </aside>
+                
+                <!-- قائمة السيارات -->
+                <div class="lg:w-3/4">
+                    <!-- أدوات التحكم -->
+                    <div class="bg-white rounded-2xl shadow-sm p-6 mb-8">
+                        <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                            <div class="flex items-center space-x-4">
+                                <div class="text-gray-700 font-bold">15,247</div>
+                                <div class="text-gray-600">سيارة متاحة</div>
+                            </div>
+                            
+                            <div class="flex items-center space-x-4">
+                                <div class="text-gray-700">ترتيب حسب:</div>
+                                <select class="p-2 border rounded-lg bg-white">
+                                    <option value="newest">الأحدث</option>
+                                    <option value="price-low">السعر: من الأقل</option>
+                                    <option value="price-high">السعر: من الأعلى</option>
+                                    <option value="popular">الأكثر مشاهدة</option>
+                                </select>
+                                
+                                <div class="flex border rounded-lg overflow-hidden">
+                                    <button class="p-3 border-r hover:bg-gray-100 active-view" data-view="grid">
+                                        <i class="fas fa-th-large"></i>
+                                    </button>
+                                    <button class="p-3 hover:bg-gray-100" data-view="list">
+                                        <i class="fas fa-list"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- عرض السيارات -->
+                    <div id="cars-container" class="car-grid-view">
+                        <!-- سيتم ملؤها بواسطة JavaScript -->
+                    </div>
+                    
+                    <!-- عرض القائمة -->
+                    <div id="cars-list-view" class="car-list-view hidden">
+                        <!-- سيتم ملؤها بواسطة JavaScript -->
+                    </div>
+                    
+                    <!-- الترقيم الصفحي -->
+                    <div class="mt-12">
+                        <nav class="pagination flex justify-center">
+                            <a href="#" class="page-link">
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                            <a href="#" class="page-link active">1</a>
+                            <a href="#" class="page-link">2</a>
+                            <a href="#" class="page-link">3</a>
+                            <a href="#" class="page-link">4</a>
+                            <a href="#" class="page-link">5</a>
+                            <a href="#" class="page-link">
+                                <i class="fas fa-chevron-left"></i>
+                            </a>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- تذييل الصفحة -->
+    <footer class="bg-gray-900 text-white pt-12 pb-8">
+        <!-- نفس كود footer من index.html -->
+    </footer>
+    
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    
+    <!-- ملفات JavaScript -->
+    <script src="js/main.js"></script>
+    <script src="js/cars-data.js"></script>
+    <script src="js/cars-page.js"></script>
+</body>
+</html>

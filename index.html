@@ -1,742 +1,852 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AutoHub - Premium Car Marketplace</title>
-  <meta name="description" content="Buy and sell premium new & used cars with direct seller contact. Smart, secure, and seamless." />
-
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
-
-  <!-- Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-
-  <style>
-    :root {
-      --primary: #1e40af;
-      --primary-light: #3b82f6;
-      --secondary: #facc15;
-      --text: #1e293b;
-      --text-light: #64748b;
-      --bg: #f8fafc;
-      --card: #ffffff;
-      --border: #e2e8f0;
-      --success: #10b981;
-      --danger: #ef4444;
-      --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-      --radius: 12px;
-      --transition: all 0.3s ease;
-    }
-
-    [dir="rtl"] {
-      font-family: 'Cairo', sans-serif;
-    }
-    [dir="ltr"] {
-      font-family: 'Inter', sans-serif;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-      scroll-behavior: smooth;
-      transition: var(--transition);
-    }
-
-    /* Navbar */
-    nav {
-      background: rgba(30, 64, 175, 0.95);
-      backdrop-filter: blur(12px);
-      color: white;
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-
-    .logo {
-      font-weight: 700;
-      font-size: 1.5rem;
-      letter-spacing: -0.5px;
-    }
-
-    nav ul {
-      display: flex;
-      gap: 2rem;
-      list-style: none;
-    }
-
-    nav ul li a {
-      color: white;
-      text-decoration: none;
-      font-weight: 500;
-      transition: var(--transition);
-      position: relative;
-    }
-
-    nav ul li a::after {
-      content: '';
-      position: absolute;
-      bottom: -5px;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background: var(--secondary);
-      transition: var(--transition);
-    }
-
-    nav ul li a:hover::after {
-      width: 100%;
-    }
-
-    .nav-actions {
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-    }
-
-    .btn {
-      padding: 0.6rem 1.2rem;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: var(--transition);
-      font-size: 0.95rem;
-    }
-
-    .btn-primary {
-      background: var(--secondary);
-      color: #1e293b;
-    }
-
-    .btn-primary:hover {
-      background: #f59e0b;
-      transform: translateY(-2px);
-    }
-
-    .btn-lang {
-      background: transparent;
-      color: white;
-      border: 1px solid rgba(255,255,255,0.3);
-    }
-
-    .hamburger {
-      display: none;
-      font-size: 1.6rem;
-      cursor: pointer;
-    }
-
-    /* Hero */
-    header {
-      text-align: center;
-      padding: 4rem 2rem;
-      background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
-      position: relative;
-      overflow: hidden;
-    }
-
-    header h1 {
-      font-size: 2.8rem;
-      margin-bottom: 1rem;
-      background: linear-gradient(to right, var(--primary), var(--primary-light));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      font-weight: 700;
-    }
-
-    header p {
-      font-size: 1.2rem;
-      color: var(--text-light);
-      max-width: 600px;
-      margin: 0 auto 2rem;
-    }
-
-    #car3D {
-      width: 100%;
-      max-width: 500px;
-      height: 350px;
-      margin: 2rem auto;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      background: #fff;
-    }
-
-    /* Main */
-    main {
-      padding: 2rem;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-
-    section {
-      margin-bottom: 4rem;
-    }
-
-    h2 {
-      font-size: 2rem;
-      margin-bottom: 1.5rem;
-      color: var(--primary);
-      position: relative;
-      display: inline-block;
-    }
-
-    h2::after {
-      content: '';
-      position: absolute;
-      bottom: -8px;
-      left: 0;
-      width: 60px;
-      height: 4px;
-      background: var(--secondary);
-      border-radius: 2px;
-    }
-
-    /* Filters */
-    .filter-section {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      margin-bottom: 2rem;
-      background: var(--card);
-      padding: 1.5rem;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-    }
-
-    .filter-section input,
-    .filter-section select {
-      padding: 0.75rem;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 0.95rem;
-      flex: 1;
-      min-width: 150px;
-    }
-
-    /* Cars Grid */
-    .cars-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .car-card {
-      background: var(--card);
-      border-radius: var(--radius);
-      overflow: hidden;
-      box-shadow: var(--shadow);
-      transition: var(--transition);
-      display: flex;
-      flex-direction: column;
-    }
-
-    .car-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 12px 25px rgba(0,0,0,0.12);
-    }
-
-    .car-card img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-    }
-
-    .car-info {
-      padding: 1rem;
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .car-info h3 {
-      font-size: 1.2rem;
-      margin-bottom: 0.5rem;
-      color: var(--text);
-    }
-
-    .car-info p {
-      color: var(--text-light);
-      font-size: 0.9rem;
-      margin: 0.25rem 0;
-    }
-
-    .price {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: var(--primary);
-      margin-top: auto;
-      padding-top: 0.75rem;
-    }
-
-    .actions {
-      display: flex;
-      gap: 0.5rem;
-      margin-top: 1rem;
-    }
-
-    .btn-sm {
-      flex: 1;
-      padding: 0.5rem;
-      font-size: 0.85rem;
-      border-radius: 6px;
-    }
-
-    .btn-details {
-      background: #f1f5f9;
-      color: var(--text);
-    }
-
-    .btn-contact {
-      background: var(--primary);
-      color: white;
-    }
-
-    /* Payment */
-    .payment-section {
-      background: #fefce8;
-      border: 1px solid #fde68a;
-      padding: 1.5rem;
-      border-radius: var(--radius);
-      margin-top: 2rem;
-      display: none;
-    }
-
-    /* Modal */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(8px);
-      justify-content: center;
-      align-items: center;
-      z-index: 2000;
-      padding: 1rem;
-    }
-
-    .modal-content {
-      background: white;
-      padding: 2rem;
-      border-radius: var(--radius);
-      max-width: 500px;
-      width: 100%;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-      animation: modalIn 0.4s ease;
-    }
-
-    @keyframes modalIn {
-      from { opacity: 0; transform: scale(0.9); }
-      to { opacity: 1; transform: scale(1); }
-    }
-
-    .modal-content h3 {
-      margin-bottom: 1.5rem;
-      color: var(--primary);
-    }
-
-    .form-group {
-      margin-bottom: 1rem;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 500;
-      color: var(--text);
-    }
-
-    .form-group input,
-    .form-group textarea,
-    .form-group select {
-      width: 100%;
-      padding: 0.75rem;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 1rem;
-    }
-
-    .modal-actions {
-      display: flex;
-      gap: 1rem;
-      margin-top: 1.5rem;
-    }
-
-    footer {
-      text-align: center;
-      padding: 2rem;
-      background: white;
-      color: var(--text-light);
-      font-size: 0.9rem;
-      border-top: 1px solid var(--border);
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      nav ul { display: none; flex-direction: column; position: absolute; top: 70px; right: 0; background: var(--primary); width: 200px; padding: 1rem; border-radius: 8px; }
-      nav ul.show { display: flex; }
-      .hamburger { display: block; }
-      header h1 { font-size: 2.2rem; }
-      .filter-section { flex-direction: column; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سوق السيارات | بيع وشراء السيارات الجديدة والمستعملة</title>
+    <meta name="description" content="أكبر منصة لبيع وشراء السيارات في الوطن العربي - تويوتا، هوندا، بي إم دبليو، مرسيدس، نيسان، هيونداي">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- خطوط عربية محسنة -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;500;600;700;800&family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+    
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #7c3aed;
+            --accent: #f59e0b;
+        }
+        
+        * {
+            font-family: 'Almarai', 'Cairo', sans-serif;
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, 
+                rgba(37, 100, 235, 0.527) 0%, 
+                rgba(124, 58, 237, 0.349) 100%),
+                url('https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .floating {
+            animation: floating 6s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(2deg); }
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .stats-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        
+        .stats-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.1);
+        }
+        
+        .nav-link {
+            position: relative;
+            padding: 8px 0;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            margin: 0 auto 20px;
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-icon:hover {
+            transform: rotate(15deg) scale(1.1);
+        }
+        
+        /* تنسيق السعر */
+        .price-tag {
+            background: linear-gradient(135deg, #10b981, #34d399);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.25rem;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+        
+        /* شريط التمرير */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 5px;
+        }
+        
+        .loading {
+            animation: shimmer 2s infinite linear;
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        
+        .badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .badge-premium {
+            background: linear-gradient(135deg, #f59e0b, #fbbf24);
+            color: white;
+        }
+        
+        .badge-new {
+            background: linear-gradient(135deg, #3b82f6, #60a5fa);
+            color: white;
+        }
+        
+        .badge-featured {
+            background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+            color: white;
+        }
+        
+        .car-image-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px 12px 0 0;
+        }
+        
+        .car-image-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.7));
+            z-index: 1;
+        }
+        
+        /* تدرج ألوان للخلفية */
+        .bg-gradient-dark {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+        }
+        
+        /* تأثيرات القائمة */
+        .dropdown-menu {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+        
+        .dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+    </style>
 </head>
-<body>
-
-  <!-- Navbar -->
-  <nav>
-    <div class="logo">AutoHub</div>
-    <div class="hamburger" id="hamburger">☰</div>
-    <ul id="navLinks">
-      <li><a href="#hero" class="nav-link">Home</a></li>
-      <li><a href="#allCars" class="nav-link">All Cars</a></li>
-      <li><a href="#about" class="nav-link">About</a></li>
-      <li><a href="#contact" class="nav-link">Contact</a></li>
-    </ul>
-    <div class="nav-actions">
-      <button class="btn btn-lang" id="langBtn">عربي</button>
-      <button class="btn btn-primary" id="addCarBtn">+ Sell Car</button>
-    </div>
-  </nav>
-
-  <!-- Hero -->
-  <header id="hero">
-    <h1 id="heroTitle">Smart Premium Car Marketplace</h1>
-    <p id="heroDesc">Discover thousands of verified cars. Buy directly from sellers with confidence.</p>
-    <canvas id=""></canvas>
-  </header>
-
-  <main>
-    <!-- Cars Section -->
-    <section id="allCars">
-      <h2 id="allCarsTitle">All Cars</h2>
-
-      <div class="filter-section">
-        <input type="text" id="searchBrand" placeholder="Search by brand..." />
-        <input type="text" id="searchModel" placeholder="Model..." />
-        <input type="number" id="searchYear" placeholder="Year" />
-        <input type="number" id="searchMinPrice" placeholder="Min Price" />
-        <input type="number" id="searchMaxPrice" placeholder="Max Price" />
-        <button class="btn btn-primary" id="applyFilter">Apply Filter</button>
-      </div>
-
-      <div class="cars-grid" id="carsGrid"></div>
-    </section>
-
-    <!-- Payment -->
-    <section id="paymentSection" class="payment-section">
-      <h3>Complete Your Purchase</h3>
-      <p>Select payment method:</p>
-      <select id="paymentMethod" class="form-control">
-        <option value="credit">Credit Card</option>
-        <option value="paypal">PayPal</option>
-        <option value="cash">Cash on Delivery</option>
-      </select>
-      <button class="btn btn-primary" style="margin-top:1rem;" onclick="completePayment()">Complete Payment</button>
-    </section>
-  </main>
-
-  <!-- About -->
-  <section id="about">
-    <h2>About AutoHub</h2>
-    <p>AutoHub connects buyers and sellers in a trusted, intelligent marketplace. Every car is verified, and every transaction is secure.</p>
-  </section>
-
-  <!-- Contact -->
-  <section id="contact">
-    <h2>Contact Us</h2>
-    <p>Email: <a href="mailto:info@autohub.com">info@autohub.com</a></p>
-    <p>Phone: <a href="tel:+123456789">+1 234 567 89</a></p>
-  </section>
-
-  <footer>
-    © <span id="year"></span> AutoHub. All rights reserved.
-  </footer>
-
-  <!-- Sell Car Modal -->
-  <div class="modal" id="sellModal">
-    <div class="modal-content">
-      <h3 id="modalTitle">Sell Your Car</h3>
-      <div class="form-group">
-        <label>Title</label>
-        <input type="text" id="carTitle" />
-      </div>
-      <div class="form-group">
-        <label>Brand</label>
-        <input type="text" id="carBrand" />
-      </div>
-      <div class="form-group">
-        <label>Model</label>
-        <input type="text" id="carModel" />
-      </div>
-      <div class="form-group">
-        <label>Year</label>
-        <input type="number" id="carYear" min="1900" max="2026" />
-      </div>
-      <div class="form-group">
-        <label>Price ($)</label>
-        <input type="number" id="carPrice" />
-      </div>
-      <div class="form-group">
-        <label>Mileage (km)</label>
-        <input type="text" id="carMileage" />
-      </div>
-      <div class="form-group">
-        <label>Image URL</label>
-        <input type="url" id="carImage" placeholder="https://example.com/car.jpg" />
-      </div>
-      <div class="form-group">
-        <label>Description</label>
-        <textarea id="carDescription" rows="3"></textarea>
-      </div>
-      <div class="modal-actions">
-        <button class="btn btn-primary" id="submitCar">Submit</button>
-        <button class="btn" id="closeModal">Cancel</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Scripts -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
-  <script>
-    // Elements
-    const elements = {
-      carsGrid: document.getElementById('carsGrid'),
-      sellModal: document.getElementById('sellModal'),
-      addCarBtn: document.getElementById('addCarBtn'),
-      closeModal: document.getElementById('closeModal'),
-      submitCar: document.getElementById('submitCar'),
-      year: document.getElementById('year'),
-      paymentSection: document.getElementById('paymentSection'),
-      hamburger: document.getElementById('hamburger'),
-      navLinks: document.getElementById('navLinks'),
-      langBtn: document.getElementById('langBtn'),
-      applyFilter: document.getElementById('applyFilter'),
-      navLinkItems: document.querySelectorAll('.nav-link'),
-      heroTitle: document.getElementById('heroTitle'),
-      heroDesc: document.getElementById('heroDesc'),
-      allCarsTitle: document.getElementById('allCarsTitle'),
-      modalTitle: document.getElementById('modalTitle'),
-    };
-
-    // Data
-    let lang = 'en';
-    let cars = [];
-    let selectedCarIndex = null;
-
-    // Translations
-    const translations = {
-      en: {
-        heroTitle: "Smart Premium Car Marketplace",
-        heroDesc: "Discover thousands of verified cars. Buy directly from sellers with confidence.",
-        allCarsTitle: "All Cars",
-        modalTitle: "Sell Your Car",
-        addCar: "+ Sell Car",
-        langBtn: "عربي",
-        completePayment: "Complete Payment",
-        paymentSuccess: "Payment successful! Thank you for your purchase."
-      },
-      ar: {
-        heroTitle: "سوق السيارات الذكي المتميز",
-        heroDesc: "اكتشف آلاف السيارات الموثقة. اشترِ مباشرة من البائعين بثقة تامة.",
-        allCarsTitle: "جميع السيارات",
-        modalTitle: "بيع سيارتك",
-        addCar: "+ بيع سيارة",
-        langBtn: "English",
-        completePayment: "إكمال الدفع",
-        paymentSuccess: "تم الدفع بنجاح! شكرًا لشرائك."
-      }
-    };
-
-    // Set Year
-    elements.year.textContent = new Date().getFullYear();
-
-    // Language Toggle
-    elements.langBtn.onclick = () => {
-      lang = lang === 'en' ? 'ar' : 'en';
-      document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-      document.documentElement.lang = lang;
-
-      // Update texts
-      const t = translations[lang];
-      elements.heroTitle.textContent = t.heroTitle;
-      elements.heroDesc.textContent = t.heroDesc;
-      elements.allCarsTitle.textContent = t.allCarsTitle;
-      elements.modalTitle.textContent = t.modalTitle;
-      elements.addCarBtn.textContent = t.addCar;
-      elements.langBtn.textContent = t.langBtn;
-      document.querySelector('[onclick="completePayment()"]').textContent = t.completePayment;
-
-      renderCars();
-    };
-
-    // Render Cars
-    function renderCars(filtered = null) {
-      const display = filtered || cars;
-      elements.carsGrid.innerHTML = '';
-      display.forEach((car, i) => {
-        const card = document.createElement('div');
-        card.className = 'car-card';
-        card.innerHTML = `
-          <img src="${car.image}" alt="${car.title}" onerror="this.src='https://via.placeholder.com/300x180?text=No+Image'">
-          <div class="car-info">
-            <h3>${car.title}</h3>
-            <p>${car.brand} • ${car.model} • ${car.year}</p>
-            <p>${car.mileage}</p>
-            <p class="price">$${parseInt(car.price).toLocaleString()}</p>
-            <div class="actions">
-              <button class="btn btn-sm btn-details" onclick="showDetails(${i})">
-                <i class="fas fa-eye"></i> Details
-              </button>
-              <button class="btn btn-sm btn-contact" onclick="selectCar(${i})">
-                <i class="fas fa-shopping-cart"></i> Buy Now
-              </button>
+<body class="bg-gray-50">
+    
+    <!-- شريط التنعل الاحترافي -->
+    <nav class="bg-white shadow-lg fixed top-0 w-full z-50 transition-all duration-300">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <!-- الشعار مع تأثير -->
+                <div class="flex items-center space-x-3">
+                    <div class="relative">
+                        <div class="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                            <i class="fas fa-car text-white text-xl"></i>
+                        </div>
+                        <div class="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
+                    </div>
+                    <a href="index.html" class="text-2xl font-bold text-gray-800">
+                        <span class="gradient-text">سوق السيارات</span>
+                        <span class="text-gray-400 text-sm block font-normal">بيع وشراء السيارات</span>
+                    </a>
+                </div>
+                
+                <!-- روابط التنقل مع Dropdown -->
+                <div class="hidden lg:flex items-center space-x-8">
+                    <a href="index.html" class="nav-link text-gray-700 hover:text-blue-600 font-medium text-lg">
+                        الرئيسية
+                    </a>
+                    
+                    <div class="dropdown relative">
+                        <button class="nav-link text-gray-700 hover:text-blue-600 font-medium text-lg flex items-center">
+                            السيارات
+                            <i class="fas fa-chevron-down mr-2 text-sm"></i>
+                        </button>
+                        <div class="dropdown-menu absolute top-full mt-2 w-48 bg-white shadow-xl rounded-lg py-2 z-50">
+                            <a href="cars.html?type=sedan" class="block px-4 py-3 hover:bg-blue-50 text-gray-700">
+                                <i class="fas fa-car mr-3 text-blue-500"></i>سيدان
+                            </a>
+                            <a href="cars.html?type=suv" class="block px-4 py-3 hover:bg-blue-50 text-gray-700">
+                                <i class="fas fa-truck mr-3 text-green-500"></i>SUV
+                            </a>
+                            <a href="cars.html?type=sports" class="block px-4 py-3 hover:bg-blue-50 text-gray-700">
+                                <i class="fas fa-bolt mr-3 text-red-500"></i>رياضية
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <a href="sell-car.html" class="btn-primary text-white px-6 py-2 rounded-lg font-medium">
+                        <i class="fas fa-plus ml-2"></i>بيع سيارتك
+                    </a>
+                    
+                    <a href="dashboard.html" class="nav-link text-gray-700 hover:text-blue-600 font-medium text-lg">
+                        <i class="fas fa-user-circle ml-2"></i>حسابي
+                    </a>
+                    
+                    <a href="#contact" class="nav-link text-gray-700 hover:text-blue-600 font-medium text-lg">
+                        اتصل بنا
+                    </a>
+                </div>
+                
+                <!-- زر البحث والأيقونات -->
+                <div class="flex items-center space-x-4">
+                    <!-- زر البحث -->
+                    <button class="p-2 text-gray-600 hover:text-blue-600 lg:hidden">
+                        <i class="fas fa-search text-xl"></i>
+                    </button>
+                    
+                    <!-- زر الإشعارات -->
+                    <div class="relative">
+                        <button class="p-2 text-gray-600 hover:text-blue-600">
+                            <i class="fas fa-bell text-xl"></i>
+                        </button>
+                        <span class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">3</span>
+                    </div>
+                    
+                    <!-- زر المفضلة -->
+                    <a href="dashboard.html#favorites" class="p-2 text-gray-600 hover:text-red-500">
+                        <i class="fas fa-heart text-xl"></i>
+                    </a>
+                    
+                    <!-- زر القائمة للموبايل -->
+                    <button id="mobile-menu-button" class="lg:hidden p-2 text-gray-700">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
             </div>
-          </div>
-        `;
-        elements.carsGrid.appendChild(card);
-      });
-    }
+            
+            <!-- شريط البحث للموبايل -->
+            <div id="mobile-search" class="hidden lg:hidden mb-4">
+                <div class="relative">
+                    <input type="text" placeholder="ابحث عن سيارة..." 
+                           class="w-full p-3 pr-12 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <button class="absolute left-3 top-3 text-gray-500">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- القائمة المتنقلة -->
+            <div id="mobile-menu" class="hidden lg:hidden py-4 border-t animate__animated animate__fadeIn">
+                <a href="index.html" class="block py-3 px-4 text-gray-700 hover:bg-blue-50 rounded-lg transition mb-2">
+                    <i class="fas fa-home ml-3"></i> الرئيسية
+                </a>
+                <a href="cars.html" class="block py-3 px-4 text-gray-700 hover:bg-blue-50 rounded-lg transition mb-2">
+                    <i class="fas fa-car ml-3"></i> السيارات
+                </a>
+                <a href="sell-car.html" class="block py-3 px-4 text-gray-700 hover:bg-blue-50 rounded-lg transition mb-2">
+                    <i class="fas fa-plus ml-3"></i> بيع سيارتك
+                </a>
+                <a href="dashboard.html" class="block py-3 px-4 text-gray-700 hover:bg-blue-50 rounded-lg transition mb-2">
+                    <i class="fas fa-user ml-3"></i> حسابي
+                </a>
+                <a href="#contact" class="block py-3 px-4 text-gray-700 hover:bg-blue-50 rounded-lg transition">
+                    <i class="fas fa-phone ml-3"></i> اتصل بنا
+                </a>
+            </div>
+        </div>
+    </nav>
 
-    // Show Details
-    window.showDetails = (i) => {
-      const car = cars[i];
-      alert(`${car.title}\n${car.description}\nPrice: $${car.price}\nMileage: ${car.mileage}`);
-    };
-
-    // Select Car
-    window.selectCar = (i) => {
-      selectedCarIndex = i;
-      alert(`Selected: ${cars[i].title}`);
-      elements.paymentSection.style.display = 'block';
-      elements.paymentSection.scrollIntoView({ behavior: 'smooth' });
-    };
-
-    // Complete Payment
-    window.completePayment = () => {
-      const t = translations[lang];
-      alert(t.paymentSuccess);
-      elements.paymentSection.style.display = 'none';
-    };
-
-    // Modal Controls
-    elements.addCarBtn.onclick = () => elements.sellModal.style.display = 'flex';
-    elements.closeModal.onclick = () => elements.sellModal.style.display = 'none';
-    window.onclick = (e) => { if (e.target === elements.sellModal) elements.sellModal.style.display = 'none'; };
-
-    // Submit Car
-    elements.submitCar.onclick = () => {
-      const inputs = {
-        title: document.getElementById('carTitle').value.trim(),
-        brand: document.getElementById('carBrand').value.trim(),
-        model: document.getElementById('carModel').value.trim(),
-        year: document.getElementById('carYear').value,
-        price: document.getElementById('carPrice').value,
-        mileage: document.getElementById('carMileage').value.trim(),
-        image: document.getElementById('carImage').value.trim(),
-        description: document.getElementById('carDescription').value.trim(),
-      };
-
-      if (Object.values(inputs).every(v => v)) {
-        cars.unshift(inputs);
-        renderCars();
-        elements.sellModal.style.display = 'none';
-        document.querySelectorAll('#sellModal input, #sellModal textarea').forEach(i => i.value = '');
-        alert('Car added successfully!');
-      } else {
-        alert('Please fill all fields.');
-      }
-    };
-
-    // Hamburger
-    elements.hamburger.onclick = () => elements.navLinks.classList.toggle('show');
-    elements.navLinkItems.forEach(link => {
-      link.addEventListener('click', () => {
-        if (window.innerWidth <= 768) elements.navLinks.classList.remove('show');
-      });
-    });
-
-    // Filters
-    elements.applyFilter.onclick = () => {
-      const filters = {
-        brand: document.getElementById('searchBrand').value.toLowerCase(),
-        model: document.getElementById('searchModel').value.toLowerCase(),
-        year: document.getElementById('searchYear').value,
-        min: document.getElementById('searchMinPrice').value,
-        max: document.getElementById('searchMaxPrice').value,
-      };
-
-      const filtered = cars.filter(c => 
-        (!filters.brand || c.brand.toLowerCase().includes(filters.brand)) &&
-        (!filters.model || c.model.toLowerCase().includes(filters.model)) &&
-        (!filters.year || c.year == filters.year) &&
-        (!filters.min || c.price >= filters.min) &&
-        (!filters.max || c.price <= filters.max)
-      );
-
-      renderCars(filtered);
-    };
-
-    // 3D Car Model (GLTF)
-    const canvas = document.getElementById('car3D');
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xf8fafc);
-    const camera = new THREE.PerspectiveCamera(50, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-    renderer.setSize(canvas.clientWidth, canvas.clientHeight);
-    renderer.setPixelRatio(window.devicePixelRatio);
-
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-    scene.add(ambientLight);
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    directionalLight.position.set(10, 10, 5);
-    scene.add(directionalLight);
-
-    camera.position.set(0, 2, 6);
-
-    let carModel;
-    const loader = new THREE.GLTFLoader();
-    loader.load(
-      'https://threejs.org/examples/models/gltf/SciFiHelmet/SciFiHelmet.gltf',
-      (gltf) => {
-        carModel = gltf.scene;
-        carModel.scale.set(2, 2, 2);
-        scene.add(carModel);
-      },
-      undefined,
-      () => {
-        const geometry = new THREE.BoxGeometry(2, 1, 3);
-        const material = new THREE.MeshStandardMaterial({ color: 0x1e40af });
-        carModel = new THREE.Mesh(geometry, material);
-        scene.add(carModel);
-      }
-    );
-
-    function animate() {
-      requestAnimationFrame(animate);
-      if (carModel) carModel.rotation.y += 0.005;
-      renderer.render(scene, camera);
-    }
-    animate();
-
-    window.addEventListener('resize', () => {
-      camera.aspect = canvas.clientWidth / canvas.clientHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(canvas.clientWidth, canvas.clientHeight);
-    });
-  </script>
+    <!-- زر العودة للأعلى -->
+    <button id="back-to-top" 
+            class="fixed bottom-8 left-8 bg-gradient-to-br from-blue-600 to-purple-600 text-white p-4 rounded-full shadow-xl z-40 opacity-0 invisible transition-all duration-300 hover:shadow-2xl hover:scale-110">
+        <i class="fas fa-arrow-up text-lg"></i>
+    </button>
+    
+    <!-- القسم الرئيسي مع بيانات حقيقية -->
+    <header class="hero-gradient text-white pt-32 pb-32 relative overflow-hidden">
+        <!-- عناصر متحركة -->
+        <div class="absolute inset-0 overflow-hidden">
+            <div class="absolute top-20 right-1/4 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-pulse"></div>
+            <div class="absolute bottom-20 left-1/4 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-pulse" style="animation-delay: 2s;"></div>
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-pulse" style="animation-delay: 4s;"></div>
+        </div>
+        
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="max-w-4xl mx-auto text-center">
+                <!-- عنوان رئيسي متحرك -->
+                <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight animate__animated animate__fadeInDown">
+                    ابحث عن <span class="gradient-text">سيارتك</span> المثالية
+                </h1>
+                
+                <p class="text-xl md:text-2xl mb-10 opacity-90 animate__animated animate__fadeInUp animate__delay-1s">
+                    أكبر سوق لبيع وشراء السيارات الجديدة والمستعملة في الوطن العربي
+                </p>
+                
+                <!-- إحصائيات حقيقية -->
+                <div class="flex flex-wrap justify-center gap-8 mb-12 animate__animated animate__fadeInUp animate__delay-2s">
+                    <div class="text-center">
+                        <div class="text-4xl font-bold text-white">15,247+</div>
+                        <div class="text-blue-200">سيارة معروضة</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-4xl font-bold text-white">4,892+</div>
+                        <div class="text-blue-200">بائع موثوق</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-4xl font-bold text-white">98.7%</div>
+                        <div class="text-blue-200">رضا العملاء</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-4xl font-bold text-white">24/7</div>
+                        <div class="text-blue-200">دعم فني</div>
+                    </div>
+                </div>
+                
+                <!-- شريط البحث المتقدم -->
+                <div class="bg-white/10 glass-effect rounded-2xl p-8 shadow-2xl backdrop-blur-lg animate__animated animate__fadeInUp animate__delay-3s">
+                    <h3 class="text-2xl font-bold mb-6 text-white">ابحث عن سيارتك المفضلة</h3>
+                    
+                    <form class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <!-- الماركة -->
+                        <div>
+                            <label class="block text-right mb-2 text-blue-200 font-medium">الماركة</label>
+                            <select class="w-full p-4 rounded-xl bg-white/20 text-white border border-white/30 focus:outline-none focus:ring-2 focus:ring-blue-500 backdrop-blur-sm">
+                                <option value="">جميع الماركات</option>
+                                <option value="toyota">تويوتا</option>
+                                <option value="honda">هوندا</option>
+                                <option value="nissan">نيسان</option>
+                                <option value="bmw">بي إم دبليو</option>
+                                <option value="mercedes">مرسيدس</option>
+                                <option value="hyundai">هيونداي</option>
+                                <option value="kia">كيا</option>
+                                <option value="lexus">لكزس</option>
+                                <option value="audi">أودي</option>
+                                <option value="ford">فورد</option>
+                            </select>
+                        </div>
+                        
+                        <!-- الموديل -->
+                        <div>
+                            <label class="block text-right mb-2 text-blue-200 font-medium">الموديل</label>
+                            <input type="text" 
+                                   placeholder="مثال: كامري, اكس في, X5" 
+                                   class="w-full p-4 rounded-xl bg-white/20 text-white border border-white/30 focus:outline-none focus:ring-2 focus:ring-blue-500 backdrop-blur-sm">
+                        </div>
+                        
+                        <!-- السعر -->
+                        <div>
+                            <label class="block text-right mb-2 text-blue-200 font-medium">السعر</label>
+                            <select class="w-full p-4 rounded-xl bg-white/20 text-white border border-white/30 focus:outline-none focus:ring-2 focus:ring-blue-500 backdrop-blur-sm">
+                                <option value="">جميع الأسعار</option>
+                                <option value="0-50000">أقل من 50,000 ر.س</option>
+                                <option value="50000-100000">50,000 - 100,000 ر.س</option>
+                                <option value="100000-200000">100,000 - 200,000 ر.س</option>
+                                <option value="200000-300000">200,000 - 300,000 ر.س</option>
+                                <option value="300000+">أكثر من 300,000 ر.س</option>
+                            </select>
+                        </div>
+                        
+                        <!-- زر البحث -->
+                        <div class="flex items-end">
+                            <button type="submit" class="btn-primary w-full text-white text-lg font-bold py-4 px-6 rounded-xl hover:shadow-xl transition-all duration-300">
+                                <i class="fas fa-search mr-2"></i>بحث متقدم
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <!-- فلاتر سريعة -->
+                    <div class="flex flex-wrap gap-3 mt-6">
+                        <button class="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg transition">
+                            <i class="fas fa-bolt mr-2"></i>جديدة
+                        </button>
+                        <button class="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg transition">
+                            <i class="fas fa-star mr-2"></i>مميزة
+                        </button>
+                        <button class="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg transition">
+                            <i class="fas fa-tag mr-2"></i>خصومات
+                        </button>
+                        <button class="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg transition">
+                            <i class="fas fa-shield-alt mr-2"></i>مضمونة
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- سيارات مميزة مع صور حقيقية -->
+    <section class="py-20 bg-gradient-to-b from-white to-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4 animate__animated animate__fadeInUp">
+                    🚗 السيارات <span class="gradient-text">المميزة</span>
+                </h2>
+                <p class="text-gray-600 text-lg max-w-2xl mx-auto animate__animated animate__fadeInUp animate__delay-1s">
+                    اكتشف مجموعة مختارة من أفضل السيارات المعروضة للبيع من قبل بائعين موثوقين
+                </p>
+            </div>
+            
+            <!-- Swiper للسيارات المميزة -->
+            <div class="swiper featured-cars-swiper">
+                <div class="swiper-wrapper" id="featured-cars-container">
+                    <!-- سيتم ملؤها بواسطة JavaScript -->
+                </div>
+                <div class="swiper-pagination mt-8"></div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="cars.html" class="inline-flex items-center btn-primary text-white px-8 py-4 rounded-xl text-lg font-bold hover:shadow-xl transition-all duration-300">
+                    <span>عرض جميع السيارات</span>
+                    <i class="fas fa-arrow-left mr-3 animate__animated animate__bounceInRight animate__infinite" style="animation-duration: 2s;"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- كيف يعمل الموقع -->
+    <section class="py-20 bg-gradient-dark text-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4 animate__animated animate__fadeInUp">
+                    ⚡ كيف يعمل <span class="text-blue-400">سوق السيارات</span>
+                </h2>
+                <p class="text-gray-300 text-lg max-w-2xl mx-auto">
+                    عملية بيع وشراء سيارات بسيطة وآمنة في 3 خطوات
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <!-- الخطوة 1 -->
+                <div class="text-center group animate__animated animate__fadeInUp animate__delay-1s">
+                    <div class="feature-icon group-hover:scale-110">
+                        <i class="fas fa-search text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">البحث والتصفح</h3>
+                    <p class="text-gray-300 leading-relaxed">
+                        تصفح آلاف السيارات المعروضة للبيع باستخدام أدوات البحث المتقدمة والفلاتر الذكية
+                    </p>
+                    <div class="mt-6 text-blue-300 font-medium">
+                        <i class="fas fa-check-circle ml-2"></i> 15,247+ سيارة متاحة
+                    </div>
+                </div>
+                
+                <!-- الخطوة 2 -->
+                <div class="text-center group animate__animated animate__fadeInUp animate__delay-2s">
+                    <div class="feature-icon group-hover:scale-110">
+                        <i class="fas fa-handshake text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">التواصل والتفاوض</h3>
+                    <p class="text-gray-300 leading-relaxed">
+                        تواصل مباشر مع البائعين عبر الهاتف أو الرسائل وافحص السيارة بكل سهولة
+                    </p>
+                    <div class="mt-6 text-blue-300 font-medium">
+                        <i class="fas fa-check-circle ml-2"></i> 4,892+ بائع موثوق
+                    </div>
+                </div>
+                
+                <!-- الخطوة 3 -->
+                <div class="text-center group animate__animated animate__fadeInUp animate__delay-3s">
+                    <div class="feature-icon group-hover:scale-110">
+                        <i class="fas fa-file-contract text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">إتمام الصفقة</h3>
+                    <p class="text-gray-300 leading-relaxed">
+                        أكمل عملية الشراء بكل أمان مع ضمانات حماية المشتري والتوثيق الرسمي
+                    </p>
+                    <div class="mt-6 text-blue-300 font-medium">
+                        <i class="fas fa-check-circle ml-2"></i> 98.7% رضا العملاء
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- ماركات السيارات -->
+    <section class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+                    🏎️ <span class="gradient-text">ماركات</span> السيارات
+                </h2>
+                <p class="text-gray-600 text-lg max-w-2xl mx-auto">
+                    اكتشف أفضل ماركات السيارات المتوفرة في منصتنا
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                <!-- ماركة 1 -->
+                <div class="brand-card bg-gray-50 hover:bg-blue-50 p-6 rounded-2xl text-center transition-all duration-300 hover:scale-105 cursor-pointer">
+                    <div class="w-20 h-20 mx-auto mb-4">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Toyota_logo_red.svg/800px-Toyota_logo_red.svg.png" 
+                             alt="Toyota" class="w-full h-full object-contain">
+                    </div>
+                    <h4 class="font-bold text-gray-800">تويوتا</h4>
+                    <p class="text-gray-500 text-sm mt-1">2,847 سيارة</p>
+                </div>
+                
+                <!-- ماركة 2 -->
+                <div class="brand-card bg-gray-50 hover:bg-blue-50 p-6 rounded-2xl text-center transition-all duration-300 hover:scale-105 cursor-pointer">
+                    <div class="w-20 h-20 mx-auto mb-4">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Honda.svg/800px-Honda.svg.png" 
+                             alt="Honda" class="w-full h-full object-contain">
+                    </div>
+                    <h4 class="font-bold text-gray-800">هوندا</h4>
+                    <p class="text-gray-500 text-sm mt-1">1,523 سيارة</p>
+                </div>
+                
+                <!-- ماركة 3 -->
+                <div class="brand-card bg-gray-50 hover:bg-blue-50 p-6 rounded-2xl text-center transition-all duration-300 hover:scale-105 cursor-pointer">
+                    <div class="w-20 h-20 mx-auto mb-4">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Nissan_logo.png/800px-Nissan_logo.png" 
+                             alt="Nissan" class="w-full h-full object-contain">
+                    </div>
+                    <h4 class="font-bold text-gray-800">نيسان</h4>
+                    <p class="text-gray-500 text-sm mt-1">1,892 سيارة</p>
+                </div>
+                
+                <!-- ماركة 4 -->
+                <div class="brand-card bg-gray-50 hover:bg-blue-50 p-6 rounded-2xl text-center transition-all duration-300 hover:scale-105 cursor-pointer">
+                    <div class="w-20 h-20 mx-auto mb-4">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/BMW.svg/800px-BMW.svg.png" 
+                             alt="BMW" class="w-full h-full object-contain">
+                    </div>
+                    <h4 class="font-bold text-gray-800">بي إم دبليو</h4>
+                    <p class="text-gray-500 text-sm mt-1">892 سيارة</p>
+                </div>
+                
+                <!-- ماركة 5 -->
+                <div class="brand-card bg-gray-50 hover:bg-blue-50 p-6 rounded-2xl text-center transition-all duration-300 hover:scale-105 cursor-pointer">
+                    <div class="w-20 h-20 mx-auto mb-4">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Mercedes-Logo.svg/800px-Mercedes-Logo.svg.png" 
+                             alt="Mercedes" class="w-full h-full object-contain">
+                    </div>
+                    <h4 class="font-bold text-gray-800">مرسيدس</h4>
+                    <p class="text-gray-500 text-sm mt-1">745 سيارة</p>
+                </div>
+                
+                <!-- ماركة 6 -->
+                <div class="brand-card bg-gray-50 hover:bg-blue-50 p-6 rounded-2xl text-center transition-all duration-300 hover:scale-105 cursor-pointer">
+                    <div class="w-20 h-20 mx-auto mb-4">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Hyundai_Motor_Company_logo_black.svg/800px-Hyundai_Motor_Company_logo_black.svg.png" 
+                             alt="Hyundai" class="w-full h-full object-contain">
+                    </div>
+                    <h4 class="font-bold text-gray-800">هيونداي</h4>
+                    <p class="text-gray-500 text-sm mt-1">1,256 سيارة</p>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <button class="text-blue-600 hover:text-blue-800 font-medium text-lg">
+                    عرض جميع الماركات <i class="fas fa-arrow-left mr-2"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- آخر المستجدات -->
+    <section class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-12">
+                <div>
+                    <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-2">
+                        📰 آخر <span class="gradient-text">المستجدات</span>
+                    </h2>
+                    <p class="text-gray-600">تابع آخر أخبار السيارات والعروض الخاصة</p>
+                </div>
+                <a href="#" class="btn-primary text-white px-6 py-3 rounded-lg mt-4 md:mt-0">
+                    المزيد من الأخبار
+                </a>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- مقال 1 -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1553440569-bcc63803a83d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                             alt="Electric Cars" class="w-full h-full object-cover hover:scale-110 transition duration-500">
+                        <div class="absolute top-4 right-4">
+                            <span class="badge badge-premium">جديد</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-3">مستقبل السيارات الكهربائية في السعودية</h3>
+                        <p class="text-gray-600 mb-4">تقرير شامل عن مستقبل السيارات الكهربائية وأحدث الموديلات المتوفرة في السوق السعودي...</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-500 text-sm">منذ 3 أيام</span>
+                            <a href="#" class="text-blue-600 hover:text-blue-800 font-medium">
+                                اقرأ المزيد <i class="fas fa-arrow-left mr-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- مقال 2 -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                             alt="Car Maintenance" class="w-full h-full object-cover hover:scale-110 transition duration-500">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-3">نصائح للصيانة الدورية لسيارتك</h3>
+                        <p class="text-gray-600 mb-4">دليل شامل للصيانة الدورية للسيارات وكيف تحافظ على سيارتك لتدوم أطول...</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-500 text-sm">منذ أسبوع</span>
+                            <a href="#" class="text-blue-600 hover:text-blue-800 font-medium">
+                                اقرأ المزيد <i class="fas fa-arrow-left mr-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- مقال 3 -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1553440569-bcc63803a83d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                             alt="Car Buying Guide" class="w-full h-full object-cover hover:scale-110 transition duration-500">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-3">دليل الشراء: كيف تختار السيارة المناسبة؟</h3>
+                        <p class="text-gray-600 mb-4">خطوات عملية لاختيار السيارة المناسبة لعائلتك وميزانيتك ونمط حياتك...</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-500 text-sm">منذ أسبوعين</span>
+                            <a href="#" class="text-blue-600 hover:text-blue-800 font-medium">
+                                اقرأ المزيد <i class="fas fa-arrow-left mr-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- التذييل -->
+    <footer id="contact" class="bg-gray-900 text-white pt-16 pb-8">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+                <!-- معلومات الموقع -->
+                <div>
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center ml-3">
+                            <i class="fas fa-car text-white text-xl"></i>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold">سوق السيارات</div>
+                            <div class="text-gray-400 text-sm">بيع وشراء السيارات</div>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 mb-6 leading-relaxed">
+                        أكبر منصة لبيع وشراء السيارات في الوطن العربي. نوفر تجربة آمنة وسهلة للعثور على السيارة المثالية.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-blue-600 rounded-lg flex items-center justify-center transition">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-blue-700 rounded-lg flex items-center justify-center transition">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-pink-600 rounded-lg flex items-center justify-center transition">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-green-500 rounded-lg flex items-center justify-center transition">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- روابط سريعة -->
+                <div>
+                    <h4 class="text-xl font-bold mb-6">روابط سريعة</h4>
+                    <ul class="space-y-3">
+                        <li>
+                            <a href="index.html" class="text-gray-400 hover:text-white transition flex items-center group">
+                                <i class="fas fa-chevron-left ml-3 text-blue-500 opacity-0 group-hover:opacity-100 transition"></i>
+                                الرئيسية
+                            </a>
+                        </li>
+                        <li>
+                            <a href="cars.html" class="text-gray-400 hover:text-white transition flex items-center group">
+                                <i class="fas fa-chevron-left ml-3 text-blue-500 opacity-0 group-hover:opacity-100 transition"></i>
+                                تصفح السيارات
+                            </a>
+                        </li>
+                        <li>
+                            <a href="sell-car.html" class="text-gray-400 hover:text-white transition flex items-center group">
+                                <i class="fas fa-chevron-left ml-3 text-blue-500 opacity-0 group-hover:opacity-100 transition"></i>
+                                بيع سيارتك
+                            </a>
+                        </li>
+                        <li>
+                            <a href="dashboard.html" class="text-gray-400 hover:text-white transition flex items-center group">
+                                <i class="fas fa-chevron-left ml-3 text-blue-500 opacity-0 group-hover:opacity-100 transition"></i>
+                                حسابي
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- ماركات شائعة -->
+                <div>
+                    <h4 class="text-xl font-bold mb-6">ماركات شائعة</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">تويوتا</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">هوندا</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">نيسان</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">بي إم دبليو</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">مرسيدس</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">هيونداي</a></li>
+                    </ul>
+                </div>
+                
+                <!-- اتصل بنا -->
+                <div>
+                    <h4 class="text-xl font-bold mb-6">اتصل بنا</h4>
+                    <ul class="space-y-4">
+                        <li class="flex items-center">
+                            <i class="fas fa-phone text-blue-400 ml-3"></i>
+                            <span>9200 12345</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-envelope text-blue-400 ml-3"></i>
+                            <span>info@souqcars.com</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-map-marker-alt text-blue-400 ml-3"></i>
+                            <span>الرياض، السعودية</span>
+                        </li>
+                    </ul>
+                    
+                    <!-- النشرة البريدية -->
+                    <div class="mt-8">
+                        <h5 class="font-bold mb-3">اشترك في النشرة الإخبارية</h5>
+                        <form class="space-y-3">
+                            <input type="email" placeholder="بريدك الإلكتروني" 
+                                   class="w-full p-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <button type="submit" class="w-full btn-primary text-white py-3 rounded-lg font-medium">
+                                اشتراك
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- حقوق النشر -->
+            <div class="border-t border-gray-800 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <div class="text-gray-500 text-center md:text-right">
+                        <p>&copy; 2024 سوق السيارات. جميع الحقوق محفوظة.</p>
+                        <p class="mt-1 text-sm">تم التطوير بدقة واحترافية 💙</p>
+                    </div>
+                    
+                    <div class="flex space-x-6 mt-4 md:mt-0">
+                        <a href="#" class="text-gray-500 hover:text-white text-sm">سياسة الخصوصية</a>
+                        <a href="#" class="text-gray-500 hover:text-white text-sm">شروط الاستخدام</a>
+                        <a href="#" class="text-gray-500 hover:text-white text-sm">الأسئلة الشائعة</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- مكتبات JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    
+    <!-- ملفات JavaScript -->
+    <script src="js/main.js"></script>
+    <script src="js/cars-data.js"></script>
+    <script src="js/animations.js"></script>
 </body>
 </html>

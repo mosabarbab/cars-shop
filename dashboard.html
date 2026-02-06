@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - سيارات.com</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js للإحصائيات -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        .dashboard-card {
+            transition: all 0.3s ease;
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-card {
+            border-radius: 0.75rem;
+            overflow: hidden;
+        }
+        
+        .sidebar-link {
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-link:hover, .sidebar-link.active {
+            background-color: #eff6ff;
+            color: #1d4ed8;
+        }
+        
+        .table-row:hover {
+            background-color: #f9fafb;
+        }
+        
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .status-active {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        
+        .status-pending {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        
+        .status-sold {
+            background-color: #f3f4f6;
+            color: #374151;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    
+    <!-- نفس شريط التنقل -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <!-- ... نفس كود navbar السابق ... -->
+    </nav>
+    
+    <!-- محتوى لوحة التحكم -->
+    <main class="py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col lg:flex-row gap-8">
+                <!-- الشريط الجانبي -->
+                <aside class="lg:w-1/4">
+                    <div class="bg-white rounded-lg shadow p-6 sticky top-24">
+                        <!-- معلومات المستخدم -->
+                        <div class="flex items-center mb-8 pb-6 border-b">
+                            <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center ml-4">
+                                <i class="fas fa-user text-blue-600 text-2xl"></i>
+                            </div>
+                            <div>
+                                <div class="font-bold text-lg" id="user-name">أحمد محمد</div>
+                                <div class="text-gray-600 text-sm">عضو منذ 2022</div>
+                            </div>
+                        </div>
+                        
+                        <!-- القائمة الجانبية -->
+                        <nav class="space-y-2">
+                            <a href="#overview" class="sidebar-link flex items-center active">
+                                <i class="fas fa-chart-bar ml-3"></i>
+                                <span>نظرة عامة</span>
+                            </a>
+                            <a href="#my-cars" class="sidebar-link flex items-center">
+                                <i class="fas fa-car ml-3"></i>
+                                <span>سياراتي</span>
+                                <span class="mr-auto bg-blue-100 text-blue-600 px-2 py-1 rounded-full text-xs" id="cars-count">0</span>
+                            </a>
+                            <a href="#messages" class="sidebar-link flex items-center">
+                                <i class="fas fa-envelope ml-3"></i>
+                                <span>الرسائل</span>
+                                <span class="mr-auto bg-red-100 text-red-600 px-2 py-1 rounded-full text-xs" id="messages-count">3</span>
+                            </a>
+                            <a href="#favorites" class="sidebar-link flex items-center">
+                                <i class="fas fa-heart ml-3"></i>
+                                <span>المفضلة</span>
+                            </a>
+                            <a href="#settings" class="sidebar-link flex items-center">
+                                <i class="fas fa-cog ml-3"></i>
+                                <span>الإعدادات</span>
+                            </a>
+                            <a href="#help" class="sidebar-link flex items-center">
+                                <i class="fas fa-question-circle ml-3"></i>
+                                <span>المساعدة</span>
+                            </a>
+                        </nav>
+                        
+                        <!-- أزرار سريعة -->
+                        <div class="mt-8 pt-6 border-t">
+                            <a href="sell-car.html" class="block w-full bg-blue-600 hover:bg-blue-700 text-white text-center font-medium py-3 rounded-lg transition mb-3">
+                                <i class="fas fa-plus ml-2"></i> إضافة سيارة جديدة
+                            </a>
+                            <button id="logout-btn" class="block w-full border border-gray-300 hover:bg-gray-50 text-center font-medium py-3 rounded-lg transition">
+                                <i class="fas fa-sign-out-alt ml-2"></i> تسجيل الخروج
+                            </button>
+                        </div>
+                    </div>
+                </aside>
+                
+                <!-- المحتوى الرئيسي -->
+                <div class="lg:w-3/4">
+                    <!-- نظرة عامة -->
+                    <section id="overview" class="dashboard-section active">
+                        <h1 class="text-3xl font-bold mb-6">لوحة التحكم</h1>
+                        
+                        <!-- بطاقات الإحصائيات -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                            <!-- بطاقة السيارات المعروضة -->
+                            <div class="stat-card dashboard-card bg-white rounded-lg shadow p-6">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <div class="text-3xl font-bold text-blue-600" id="active-cars">0</div>
+                                        <div class="text-gray-600 mt-1">سيارة معروضة</div>
+                                    </div>
+                                    <div class="bg-blue-100 p-3 rounded-lg">
+                                        <i class="fas fa-car text-blue-600 text-2xl"></i>
+                                    </div>
+                                </div>
+                                <div class="mt-4 text-sm text-green-600">
+                                    <i class="fas fa-arrow-up ml-1"></i> 12% عن الشهر الماضي
+                                </div>
+                            </div>
+                            
+                            <!-- بطاقة المشاهدات -->
+                            <div class="stat-card dashboard-card bg-white rounded-lg shadow p-6">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <div class="text-3xl font-bold text-green-600" id="total-views">0</div>
+                                        <div class="text-gray-600 mt-1">مشاهدة لإعلاناتك</div>
+                                    </div>
+                                    <div class="bg-green-100 p-3 rounded-lg">
+                                        <i class="fas fa-eye text-green-600 text-2xl"></i>
+                                    </div>
+                                </div>
+                                <div class="mt-4 text-sm text-green-600">
+                                    <i class="fas fa-arrow-up ml-1"></i> 24% عن الأسبوع الماضي
+                                </div>
+                            </div>
+                            
+                            <!-- بطاقة الرسائل -->
+                            <div class="stat-card dashboard-card bg-white rounded-lg shadow p-6">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <div class="text-3xl font-bold text-purple-600" id="unread-messages">0</div>
+                                        <div class="text-gray-600 mt-1">رسالة جديدة</div>
+                                    </div>
+                                    <div class="bg-purple-100 p-3 rounded-lg">
+                                        <i class="fas fa-envelope text-purple-600 text-2xl"></i>
+                                    </div>
+                                </div>
+                                <div class="mt-4 text-sm text-green-600">
+                                    <i class="fas fa-arrow-up ml-1"></i> 3 رسائل جديدة اليوم
+                                </div>
+                            </div>
+                            
+                            <!-- بطاقة المبيعات -->
+                            <div class="stat-card dashboard-card bg-white rounded-lg shadow p-6">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <div class="text-3xl font-bold text-orange-600" id="sold-cars">0</div>
+                                        <div class="text-gray-600 mt-1">سيارة مباعة</div>
+                                    </div>
+                                    <div class="bg-orange-100 p-3 rounded-lg">
+                                        <i class="fas fa-handshake text-orange-600 text-2xl"></i>
+                                    </div>
+                                </div>
+                                <div class="mt-4 text-sm text-green-600">
+                                    <i class="fas fa-arrow-up ml-1"></i> سيارة هذا الشهر
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- مخطط الإحصائيات -->
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                            <div class="bg-white rounded-lg shadow p-6">
+                                <h3 class="text-xl font-bold mb-4">مشاهدات إعلاناتك</h3>
+                                <canvas id="viewsChart" height="250"></canvas>
+                            </div>
+                            
+                            <div class="bg-white rounded-lg shadow p-6">
+                                <h3 class="text-xl font-bold mb-4">حالة السيارات</h3>
+                                <canvas id="statusChart" height="250"></canvas>
+                            </div>
+                        </div>
+                        
+                        <!-- آخر الرسائل -->
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <div class="flex justify-between items-center mb-6">
+                                <h3 class="text-xl font-bold">آخر الرسائل</h3>
+                                <a href="#messages" class="text-blue-600 hover:text-blue-800 font-medium">عرض الكل</a>
+                            </div>
+                            
+                            <div id="recent-messages">
+                                <!-- سيتم ملؤها بواسطة JavaScript -->
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- سياراتي -->
+                    <section id="my-cars" class="dashboard-section">
+                        <div class="flex justify-between items-center mb-6">
+                            <h1 class="text-3xl font-bold">سياراتي</h1>
+                            <a href="sell-car.html" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium">
+                                <i class="fas fa-plus ml-2"></i> إضافة سيارة
+                            </a>
+                        </div>
+                        
+                        <!-- أزرار التصفية -->
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <button class="filter-btn px-4 py-2 rounded-lg border bg-blue-600 text-white" data-status="all">الكل</button>
+                            <button class="filter-btn px-4 py-2 rounded-lg border hover:bg-gray-100" data-status="active">معروضة</button>
+                            <button class="filter-btn px-4 py-2 rounded-lg border hover:bg-gray-100" data-status="pending">قيد المراجعة</button>
+                            <button class="filter-btn px-4 py-2 rounded-lg border hover:bg-gray-100" data-status="sold">مباعة</button>
+                        </div>
+                        
+                        <!-- جدول السيارات -->
+                        <div class="bg-white rounded-lg shadow overflow-hidden">
+                            <div class="overflow-x-auto">
+                                <table class="w-full">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="py-3 px-4 text-right">السيارة</th>
+                                            <th class="py-3 px-4 text-right">السعر</th>
+                                            <th class="py-3 px-4 text-right">الحالة</th>
+                                            <th class="py-3 px-4 text-right">المشاهدات</th>
+                                            <th class="py-3 px-4 text-right">الرسائل</th>
+                                            <th class="py-3 px-4 text-right">الإجراءات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="user-cars-table">
+                                        <!-- سيتم ملؤها بواسطة JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <!-- حالة عدم وجود سيارات -->
+                            <div id="no-cars-message" class="hidden p-12 text-center">
+                                <i class="fas fa-car text-4xl text-gray-300 mb-4"></i>
+                                <h3 class="text-xl font-bold mb-2">لا توجد سيارات</h3>
+                                <p class="text-gray-600 mb-6">لم تقم بإضافة أي سيارات للبيع بعد</p>
+                                <a href="sell-car.html" class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium">
+                                    <i class="fas fa-plus ml-2"></i> إضافة أول سيارة
+                                </a>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- الرسائل -->
+                    <section id="messages" class="dashboard-section">
+                        <h1 class="text-3xl font-bold mb-6">الرسائل</h1>
+                        
+                        <div class="bg-white rounded-lg shadow">
+                            <div class="border-b">
+                                <div class="flex">
+                                    <button class="message-tab px-6 py-4 font-medium border-b-2 border-blue-600 text-blue-600">الوارد</button>
+                                    <button class="message-tab px-6 py-4 font-medium hover:text-blue-600">المرسلة</button>
+                                </div>
+                            </div>
+                            
+                            <div id="messages-list" class="divide-y">
+                                <!-- سيتم ملؤها بواسطة JavaScript -->
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- المفضلة -->
+                    <section id="favorites" class="dashboard-section">
+                        <h1 class="text-3xl font-bold mb-6">المفضلة</h1>
+                        
+                        <div id="favorite-cars" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- سيتم ملؤها بواسطة JavaScript -->
+                        </div>
+                        
+                        <div id="no-favorites-message" class="hidden p-12 text-center">
+                            <i class="fas fa-heart text-4xl text-gray-300 mb-4"></i>
+                            <h3 class="text-xl font-bold mb-2">لا توجد سيارات في المفضلة</h3>
+                            <p class="text-gray-600 mb-6">يمكنك إضافة سيارات إلى المفضلة من صفحة تفاصيل السيارة</p>
+                            <a href="cars.html" class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium">
+                                تصفح السيارات
+                            </a>
+                        </div>
+                    </section>
+                    
+                    <!-- الإعدادات -->
+                    <section id="settings" class="dashboard-section">
+                        <h1 class="text-3xl font-bold mb-6">الإعدادات</h1>
+                        
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <form id="settings-form">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                                    <div>
+                                        <label class="block font-medium mb-2">الاسم الكامل</label>
+                                        <input type="text" class="w-full p-3 border rounded-lg" value="أحمد محمد">
+                                    </div>
+                                    <div>
+                                        <label class="block font-medium mb-2">البريد الإلكتروني</label>
+                                        <input type="email" class="w-full p-3 border rounded-lg" value="ahmed@example.com">
+                                    </div>
+                                    <div>
+                                        <label class="block font-medium mb-2">رقم الهاتف</label>
+                                        <input type="tel" class="w-full p-3 border rounded-lg" value="+966 50 123 4567">
+                                    </div>
+                                    <div>
+                                        <label class="block font-medium mb-2">المدينة</label>
+                                        <select class="w-full p-3 border rounded-lg">
+                                            <option>الرياض</option>
+                                            <option>جدة</option>
+                                            <option>الدمام</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-8">
+                                    <h3 class="text-xl font-bold mb-4">التنبيهات</h3>
+                                    <div class="space-y-3">
+                                        <label class="flex items-center">
+                                            <input type="checkbox" class="mr-3" checked>
+                                            <span>إشعارات البريد الإلكتروني عند استلام رسائل جديدة</span>
+                                        </label>
+                                        <label class="flex items-center">
+                                            <input type="checkbox" class="mr-3" checked>
+                                            <span>تحديثات عن السيارات المشابهة لسياراتي</span>
+                                        </label>
+                                        <label class="flex items-center">
+                                            <input type="checkbox" class="mr-3">
+                                            <span>النشرة الإخبارية والعروض الخاصة</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex justify-end">
+                                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium">
+                                        حفظ التغييرات
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </section>
+                    
+                    <!-- المساعدة -->
+                    <section id="help" class="dashboard-section">
+                        <h1 class="text-3xl font-bold mb-6">المساعدة</h1>
+                        
+                        <div class="space-y-6">
+                            <!-- الأسئلة الشائعة -->
+                            <div class="bg-white rounded-lg shadow p-6">
+                                <h3 class="text-xl font-bold mb-4">الأسئلة الشائعة</h3>
+                                
+                                <div class="space-y-4">
+                                    <div class="border-b pb-4">
+                                        <button class="faq-question flex justify-between items-center w-full text-right font-medium">
+                                            <span>كيف يمكنني تعديل سعر سيارتي؟</span>
+                                            <i class="fas fa-chevron-down text-gray-400"></i>
+                                        </button>
+                                        <div class="faq-answer mt-2 text-gray-600 hidden">
+                                            يمكنك تعديل سعر سيارتك من خلال لوحة التحكم → سياراتي → اختيار السيارة → زر التعديل.
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="border-b pb-4">
+                                        <button class="faq-question flex justify-between items-center w-full text-right font-medium">
+                                            <span>كيف أتواصل مع المشترين؟</span>
+                                            <i class="fas fa-chevron-down text-gray-400"></i>
+                                        </button>
+                                        <div class="faq-answer mt-2 text-gray-600 hidden">
+                                            يمكنك الرد على رسائل المشترين من خلال قسم الرسائل في لوحة التحكم.
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="border-b pb-4">
+                                        <button class="faq-question flex justify-between items-center w-full text-right font-medium">
+                                            <span>متى يتم نشر إعلاني بعد إضافته؟</span>
+                                            <i class="fas fa-chevron-down text-gray-400"></i>
+                                        </button>
+                                        <div class="faq-answer mt-2 text-gray-600 hidden">
+                                            يتم نشر الإعلان فوراً بعد إضافته، وقد يستغرق بضع دقائق ليظهر في نتائج البحث.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- اتصل بنا -->
+                            <div class="bg-white rounded-lg shadow p-6">
+                                <h3 class="text-xl font-bold mb-4">اتصل بنا</h3>
+                                <div class="space-y-4">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-headset text-blue-600 text-xl ml-3"></i>
+                                        <div>
+                                            <div class="font-medium">الدعم الفني</div>
+                                            <div class="text-gray-600">متاح من الأحد إلى الخميس 9 صباحاً - 5 مساءً</div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-phone text-blue-600 text-xl ml-3"></i>
+                                        <div>
+                                            <div class="font-medium">رقم الهاتف</div>
+                                            <div class="text-gray-600">+966 11 123 4567</div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-envelope text-blue-600 text-xl ml-3"></i>
+                                        <div>
+                                            <div class="font-medium">البريد الإلكتروني</div>
+                                            <div class="text-gray-600">support@siyarat.com</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- نفس التذييل -->
+    
+    <!-- JavaScript -->
+    <script src="js/main.js"></script>
+    <script src="js/cars-data.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

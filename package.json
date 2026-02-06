@@ -1,0 +1,12 @@
+{
+  "name": "car-website",
+  "version": "1.0.0",
+  "description": "موقع لبيع وشراء السيارات",
+  "scripts": {
+    "dev": "live-server --port=3000",
+    "build": "echo 'Building...'"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}

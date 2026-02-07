@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة السيارات - لوحة التحكم</title>
+    
+    <!-- نفس الروابط السابقة -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css">
+    <link rel="stylesheet" href="../css/admin-style.css">
+</head>
+<body class="bg-gray-50">
+    
+    <!-- نفس الشريط الجانبي والهيدر -->
+    
+    <div class="main-content min-h-screen">
+        <header class="header">
+            <!-- نفس الهيدر -->
+        </header>
+        
+        <main class="p-6">
+            <!-- عنوان الصفحة -->
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-800">إدارة السيارات</h1>
+                    <p class="text-gray-600">إدارة جميع السيارات المعروضة على الموقع</p>
+                </div>
+                <a href="add-car.html" class="btn-admin-primary">
+                    <i class="fas fa-plus ml-2"></i> إضافة سيارة جديدة
+                </a>
+            </div>
+            
+            <!-- بطاقات الإحصائيات -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <div class="stat-card">
+                    <div class="text-2xl font-bold text-blue-600">2,847</div>
+                    <div class="text-gray-600">إجمالي السيارات</div>
+                </div>
+                <div class="stat-card">
+                    <div class="text-2xl font-bold text-yellow-600">45</div>
+                    <div class="text-gray-600">قيد المراجعة</div>
+                </div>
+                <div class="stat-card">
+                    <div class="text-2xl font-bold text-green-600">2,345</div>
+                    <div class="text-gray-600">نشطة</div>
+                </div>
+                <div class="stat-card">
+                    <div class="text-2xl font-bold text-red-600">32</div>
+                    <div class="text-gray-600">محظورة</div>
+                </div>
+            </div>
+            
+            <!-- أزرار التصفية -->
+            <div class="flex flex-wrap gap-2 mb-6">
+                <button class="btn-admin-primary">الكل</button>
+                <button class="btn-admin-secondary">النشطة</button>
+                <button class="btn-admin-secondary">قيد المراجعة</button>
+                <button class="btn-admin-secondary">المميزة</button>
+                <button class="btn-admin-secondary">المباعة</button>
+                <button class="btn-admin-secondary">المحظورة</button>
+            </div>
+            
+            <!-- جدول السيارات -->
+            <div class="admin-card">
+                <div class="overflow-x-auto">
+                    <table id="carsTable" class="data-table w-full">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>الصورة</th>
+                                <th>السيارة</th>
+                                <th>السعر</th>
+                                <th>الحالة</th>
+                                <th>المالك</th>
+                                <th>المشاهدات</th>
+                                <th>تاريخ الإضافة</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- البيانات ستتم إضافتها بواسطة JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- أدوات إضافية -->
+            <div class="admin-card mt-6">
+                <h3 class="text-lg font-bold mb-4">أدوات مجمعة</h3>
+                <div class="flex flex-wrap gap-4">
+                    <button class="btn-admin-success">
+                        <i class="fas fa-check ml-2"></i> الموافقة على المحدد
+                    </button>
+                    <button class="btn-admin-danger">
+                        <i class="fas fa-times ml-2"></i> رفض المحدد
+                    </button>
+                    <button class="btn-admin-primary">
+                        <i class="fas fa-star ml-2"></i> تمييز المحدد
+                    </button>
+                    <button class="btn-admin-secondary">
+                        <i class="fas fa-download ml-2"></i> تصدير البيانات
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- JavaScript -->
+    <script src="../js/admin-main.js"></script>
+    <script src="../js/admin-api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            // تحميل بيانات السيارات
+            try {
+                const cars = await adminAPI.getCars();
+                this.renderCarsTable(cars);
+            } catch (error) {
+                console.error('Failed to load cars:', error);
+            }
+        });
+        
+        function renderCarsTable(cars) {
+            const table = $('#carsTable').DataTable({
+                data: cars,
+                columns: [
+                    { data: 'id' },
+                    { 
+                        data: 'image',
+                        render: function(data) {
+                            return `<img src="${data}" class="w-16 h-12 object-cover rounded">`;
+                        }
+                    },
+                    { 
+                        data: 'title',
+                        render: function(data, type, row) {
+                            return `
+                                <div class="font-medium">${data}</div>
+                                <div class="text-gray-600 text-sm">${row.year} • ${row.mileage} كم</div>
+                            `;
+                        }
+                    },
+                    { 
+                        data: 'price',
+                        render: function(data) {
+                            return `<span class="font-bold text-blue-600">${data.toLocaleString()} ر.س</span>`;
+                        }
+                    },
+                    { 
+                        data: 'status',
+                        render: function(data) {
+                            const statusMap = {
+                                'active': { text: 'نشطة', class: 'badge-success' },
+                                'pending': { text: 'قيد المراجعة', class: 'badge-warning' },
+                                'sold': { text: 'مباعة', class: 'badge-info' },
+                                'banned': { text: 'محظورة', class: 'badge-danger' }
+                            };
+                            const status = statusMap[data] || { text: data, class: 'badge-secondary' };
+                            return `<span class="badge ${status.class}">${status.text}</span>`;
+                        }
+                    },
+                    { data: 'seller.name' },
+                    { data: 'views' },
+                    { 
+                        data: 'createdAt',
+                        render: function(data) {
+                            return AdminUtils.formatDate(data);
+                        }
+                    },
+                    {
+                        data: 'id',
+                        render: function(data, type, row) {
+                            return `
+                                <div class="flex space-x-2">
+                                    <a href="car-details.html?id=${data}" 
+                                       class="text-blue-600 hover:text-blue-800"
+                                       title="عرض التفاصيل">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="edit-car.html?id=${data}" 
+                                       class="text-green-600 hover:text-green-800"
+                                       title="تعديل">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <button class="text-red-600 hover:text-red-800 delete-car"
+                                            data-id="${data}"
+                                            title="حذف">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            `;
+                        }
+                    }
+                ],
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/ar.json'
+                }
+            });
+            
+            // إضافة أحداث للأزرار
+            $('#carsTable').on('click', '.delete-car', function() {
+                const carId = $(this).data('id');
+                confirmAction('هل أنت متأكد من حذف هذه السيارة؟', async () => {
+                    try {
+                        await adminAPI.deleteCar(carId);
+                        table.row($(this).parents('tr')).remove().draw();
+                        AdminUtils.showToast('تم حذف السيارة بنجاح', 'success');
+                    } catch (error) {
+                        AdminUtils.showToast('فشل حذف السيارة', 'error');
+                    }
+                });
+            });
+        }
+        
+        function confirmAction(message, callback) {
+            const modal = AdminUtils.createModal({
+                title: 'تأكيد الإجراء',
+                content: message,
+                buttons: [
+                    { text: 'إلغاء', type: 'secondary', action: () => modal.remove() },
+                    { text: 'تأكيد', type: 'danger', action: () => {
+                        callback();
+                        modal.remove();
+                    }}
+                ]
+            });
+        }
+    </script>
+</body>
+</html>

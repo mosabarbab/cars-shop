@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إنشاء حساب جديد - سوق السيارات</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    
+    <style>
+        .register-bg {
+            background: linear-gradient(135deg, 
+                rgba(16, 185, 129, 0.9) 0%, 
+                rgba(5, 150, 105, 0.9) 100%),
+                url('../assets/auth-bg/car-register.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .step-indicator {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .step-indicator::before {
+            content: '';
+            position: absolute;
+            top: 24px;
+            right: 50%;
+            width: 100%;
+            height: 2px;
+            background-color: #e5e7eb;
+            z-index: -1;
+        }
+        
+        .step-indicator:first-child::before {
+            display: none;
+        }
+        
+        .step-indicator.active::before {
+            background-color: #10b981;
+        }
+        
+        .password-requirements {
+            margin-top: 0.5rem;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 0.5rem;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .requirement-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+        
+        .requirement-item.valid {
+            color: #10b981;
+        }
+        
+        .requirement-item.invalid {
+            color: #ef4444;
+        }
+        
+        .requirement-item i {
+            margin-left: 0.5rem;
+            font-size: 0.75rem;
+        }
+        
+        .country-code-select {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #6b7280;
+            font-size: 16px;
+            padding-right: 8px;
+            border-right: 1px solid #e5e7eb;
+        }
+        
+        .verification-inputs {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+        
+        .verification-input {
+            width: 3.5rem;
+            height: 3.5rem;
+            text-align: center;
+            font-size: 1.5rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.75rem;
+            background: white;
+            transition: all 0.3s ease;
+        }
+        
+        .verification-input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            outline: none;
+        }
+        
+        .verification-input.filled {
+            border-color: #10b981;
+            background: #f0fdf4;
+        }
+        
+        .countdown-timer {
+            font-family: monospace;
+            font-weight: bold;
+            color: #3b82f6;
+        }
+        
+        .user-type-card {
+            border: 2px solid #e5e7eb;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .user-type-card:hover {
+            border-color: #3b82f6;
+            transform: translateY(-4px);
+        }
+        
+        .user-type-card.selected {
+            border-color: #10b981;
+            background: #f0fdf4;
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.1);
+        }
+    </style>
+</head>
+<body class="register-bg min-h-screen flex items-center justify-center p-4">
+    
+    <!-- بطاقة التسجيل -->
+    <div class="auth-card rounded-2xl w-full max-w-2xl animate__animated animate__fadeInUp">
+        <!-- شريط الخطوات -->
+        <div class="p-6 border-b">
+            <div class="flex justify-between">
+                <div class="step-indicator flex flex-col items-center flex-1">
+                    <div class="w-12 h-12 rounded-full bg-green-500 text-white flex items-center justify-center font-bold mb-2">
+                        1
+                    </div>
+                    <span class="font-bold text-green-600">المعلومات الشخصية</span>
+                </div>
+                
+                <div class="step-indicator flex flex-col items-center flex-1">
+                    <div class="w-12 h-12 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center font-bold mb-2">
+                        2
+                    </div>
+                    <span class="font-bold text-gray-500">التحقق</span>
+                </div>
+                
+                <div class="step-indicator flex flex-col items-center flex-1">
+                    <div class="w-12 h-12 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center font-bold mb-2">
+                        3
+                    </div>
+                    <span class="font-bold text-gray-500">إكمال التسجيل</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- الشعار -->
+        <div class="p-8 text-center">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">أنشئ حساباً جديداً</h1>
+            <p class="text-gray-600">انضم إلى أكبر سوق للسيارات في الوطن العربي</p>
+        </div>
+        
+        <!-- نموذج التسجيل متعدد الخطوات -->
+        <form id="registerForm" class="p-8">
+            <!-- الخطوة 1: المعلومات الشخصية -->
+            <div class="step-content active" id="step-1">
+                <!-- نوع المستخدم -->
+                <div class="mb-8">
+                    <label class="block font-bold mb-4 text-gray-700">أنا</label>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="user-type-card" data-type="buyer">
+                            <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-shopping-cart text-blue-600 text-2xl"></i>
+                            </div>
+                            <div class="font-bold text-gray-800 mb-2">مشتري</div>
+                            <div class="text-gray-600 text-sm">أرغب في شراء سيارة</div>
+                        </div>
+                        
+                        <div class="user-type-card" data-type="seller">
+                            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-car text-green-600 text-2xl"></i>
+                            </div>
+                            <div class="font-bold text-gray-800 mb-2">بائع</div>
+                            <div class="text-gray-600 text-sm">أرغب في بيع سيارتي</div>
+                        </div>
+                        
+                        <div class="user-type-card" data-type="both">
+                            <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-exchange-alt text-purple-600 text-2xl"></i>
+                            </div>
+                            <div class="font-bold text-gray-800 mb-2">الاثنين معاً</div>
+                            <div class="text-gray-600 text-sm">أرغب في البيع والشراء</div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="userType" name="userType" required>
+                </div>
+                
+                <!-- المعلومات الأساسية -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div class="input-group">
+                        <input type="text" 
+                               id="fullName"
+                               name="fullName"
+                               placeholder="الاسم الكامل"
+                               required
+                               class="form-input">
+                        <i class="input-icon fas fa-user"></i>
+                        <div class="text-red-500 text-sm mt-1 hidden" id="fullNameError"></div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <input type="email" 
+                               id="registerEmail"
+                               name="email"
+                               placeholder="البريد الإلكتروني"
+                               required
+                               class="form-input">
+                        <i class="input-icon fas fa-envelope"></i>
+                        <div class="text-red-500 text-sm mt-1 hidden" id="emailError"></div>
+                    </div>
+                    
+                    <div class="input-group relative">
+                        <select class="country-code-select" id="countryCode">
+                            <option value="+966">+966</option>
+                            <option value="+971">+971</option>
+                            <option value="+973">+973</option>
+                            <option value="+974">+974</option>
+                            <option value="+20">+20</option>
+                        </select>
+                        <input type="tel" 
+                               id="phone"
+                               name="phone"
+                               placeholder="رقم الهاتف"
+                               required
+                               class="form-input pl-24">
+                        <i class="input-icon fas fa-phone" style="left: 80px;"></i>
+                        <div class="text-red-500 text-sm mt-1 hidden" id="phoneError"></div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <input type="text" 
+                               id="city"
+                               name="city"
+                               placeholder="المدينة"
+                               required
+                               class="form-input">
+                        <i class="input-icon fas fa-map-marker-alt"></i>
+                        <div class="text-red-500 text-sm mt-1 hidden" id="cityError"></div>
+                    </div>
+                </div>
+                
+                <!-- كلمة المرور -->
+                <div class="mb-6">
+                    <div class="input-group">
+                        <input type="password" 
+                               id="registerPassword"
+                               name="password"
+                               placeholder="كلمة المرور"
+                               required
+                               minlength="8"
+                               class="form-input">
+                        <i class="input-icon fas fa-lock"></i>
+                        <button type="button" class="password-toggle" id="togglePassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <div class="text-red-500 text-sm mt-1 hidden" id="passwordError"></div>
+                    </div>
+                    
+                    <!-- متطلبات كلمة المرور -->
+                    <div class="password-requirements">
+                        <div class="requirement-item" id="reqLength">
+                            <i class="fas fa-circle"></i>
+                            <span>8 أحرف على الأقل</span>
+                        </div>
+                        <div class="requirement-item" id="reqUppercase">
+                            <i class="fas fa-circle"></i>
+                            <span>حرف كبير واحد على الأقل</span>
+                        </div>
+                        <div class="requirement-item" id="reqLowercase">
+                            <i class="fas fa-circle"></i>
+                            <span>حرف صغير واحد على الأقل</span>
+                        </div>
+                        <div class="requirement-item" id="reqNumber">
+                            <i class="fas fa-circle"></i>
+                            <span>رقم واحد على الأقل</span>
+                        </div>
+                        <div class="requirement-item" id="reqSpecial">
+                            <i class="fas fa-circle"></i>
+                            <span>رمز خاص واحد على الأقل</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- تأكيد كلمة المرور -->
+                <div class="input-group mb-6">
+                    <input type="password" 
+                           id="confirmPassword"
+                           name="confirmPassword"
+                           placeholder="تأكيد كلمة المرور"
+                           required
+                           class="form-input">
+                    <i class="input-icon fas fa-lock"></i>
+                    <button type="button" class="password-toggle" id="toggleConfirmPassword">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <div class="text-red-500 text-sm mt-1 hidden" id="confirmPasswordError"></div>
+                </div>
+                
+                <!-- الشروط والأحكام -->
+                <div class="mb-8">
+                    <label class="flex items-start cursor-pointer">
+                        <input type="checkbox" 
+                               id="terms"
+                               name="terms"
+                               required
+                               class="h-5 w-5 text-blue-600 rounded border-gray-300 mt-1">
+                        <span class="mr-3 text-gray-700">
+                            أوافق على 
+                            <a href="#" class="text-blue-600 hover:text-blue-800">شروط الاستخدام</a> و 
+                            <a href="#" class="text-blue-600 hover:text-blue-800">سياسة الخصوصية</a>
+                        </span>
+                    </label>
+                    <div class="text-red-500 text-sm mt-1 hidden" id="termsError"></div>
+                </div>
+                
+                <!-- زر التالي -->
+                <div class="flex justify-end">
+                    <button type="button" 
+                            id="nextStep1"
+                            class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-xl font-bold hover:shadow-xl transition">
+                        التالي <i class="fas fa-arrow-left ml-3"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- الخطوة 2: التحقق -->
+            <div class="step-content hidden" id="step-2">
+                <div class="text-center mb-8">
+                    <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-mobile-alt text-blue-600 text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">التحقق من الهاتف</h3>
+                    <p class="text-gray-600">
+                        تم إرسال رمز التحقق إلى 
+                        <span id="phoneDisplay" class="font-bold"></span>
+                    </p>
+                </div>
+                
+                <!-- إدخال رمز التحقق -->
+                <div class="mb-8">
+                    <div class="verification-inputs mb-6">
+                        <input type="text" maxlength="1" class="verification-input">
+                        <input type="text" maxlength="1" class="verification-input">
+                        <input type="text" maxlength="1" class="verification-input">
+                        <input type="text" maxlength="1" class="verification-input">
+                        <input type="text" maxlength="1" class="verification-input">
+                        <input type="text" maxlength="1" class="verification-input">
+                    </div>
+                    
+                    <!-- العد التنازلي لإعادة الإرسال -->
+                    <div class="text-center mb-6">
+                        <p class="text-gray-600 mb-2">لم يصلك الرمز؟</p>
+                        <button type="button" 
+                                id="resendCode"
+                                class="text-blue-600 hover:text-blue-800 font-medium disabled:opacity-50"
+                                disabled>
+                            إعادة إرسال الرمز (<span id="countdown" class="countdown-timer">60</span> ثانية)
+                        </button>
+                    </div>
+                    
+                    <!-- التحقق عبر البريد الإلكتروني -->
+                    <div class="text-center">
+                        <button type="button" id="verifyEmail" class="text-blue-600 hover:text-blue-800 font-medium">
+                            <i class="fas fa-envelope ml-2"></i> التحقق عبر البريد الإلكتروني
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- أزرار التنقل -->
+                <div class="flex justify-between">
+                    <button type="button" 
+                            id="prevStep2"
+                            class="border border-gray-300 text-gray-700 px-8 py-3 rounded-xl font-bold hover:bg-gray-50 transition">
+                        <i class="fas fa-arrow-right mr-3"></i> السابق
+                    </button>
+                    
+                    <button type="button" 
+                            id="nextStep2"
+                            class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-xl font-bold hover:shadow-xl transition">
+                        التحقق <i class="fas fa-check ml-3"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- الخطوة 3: إكمال التسجيل -->
+            <div class="step-content hidden" id="step-3">
+                <div class="text-center mb-8">
+                    <div class="w-24 h-24 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-check text-white text-4xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">تهانينا! 🎉</h3>
+                    <p class="text-gray-600 mb-6">تم إنشاء حسابك بنجاح</p>
+                </div>
+                
+                <!-- معلومات الحساب -->
+                <div class="bg-gray-50 rounded-xl p-6 mb-8">
+                    <h4 class="font-bold mb-4 text-gray-800">معلومات حسابك:</h4>
+                    <div class="space-y-3">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">الاسم:</span>
+                            <span id="accountName" class="font-bold"></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">البريد الإلكتروني:</span>
+                            <span id="accountEmail" class="font-bold"></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">نوع الحساب:</span>
+                            <span id="accountType" class="font-bold"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- الإجراءات التالية -->
+                <div class="space-y-4">
+                    <a href="../dashboard.html" 
+                       class="block bg-gradient-to-r from-blue-600 to-purple-600 text-white text-center p-4 rounded-xl font-bold hover:shadow-xl transition">
+                        <i class="fas fa-tachometer-alt ml-2"></i> الانتقال إلى لوحة التحكم
+                    </a>
+                    
+                    <a href="../index.html" 
+                       class="block border border-gray-300 text-gray-700 text-center p-4 rounded-xl font-bold hover:bg-gray-50 transition">
+                        <i class="fas fa-home ml-2"></i> العودة للرئيسية
+                    </a>
+                    
+                    <a href="login.html" 
+                       class="block text-blue-600 hover:text-blue-800 text-center p-2 font-medium">
+                        تسجيل الدخول إلى حسابك
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+    
+    <!-- JavaScript -->
+    <script src="../js/auth-validation.js"></script>
+    <script src="../js/auth-utils.js"></script>
+    <script src="../js/auth-main.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // تهيئة المتغيرات
+            let currentStep = 1;
+            const totalSteps = 3;
+            let countdownTimer;
+            let countdownSeconds = 60;
+            
+            // العناصر
+            const stepContents = document.querySelectorAll('.step-content');
+            const stepIndicators = document.querySelectorAll('.step-indicator');
+            const userTypeCards = document.querySelectorAll('.user-type-card');
+            const userTypeInput = document.getElementById('userType');
+            const phoneDisplay = document.getElementById('phoneDisplay');
+            const accountName = document.getElementById('accountName');
+            const accountEmail = document.getElementById('accountEmail');
+            const accountType = document.getElementById('accountType');
+            const verificationInputs = document.querySelectorAll('.verification-input');
+            const resendCodeBtn = document.getElementById('resendCode');
+            const countdownElement = document.getElementById('countdown');
+            
+            // تهيئة التحقق
+            const validator = new AuthValidator();
+            
+            // اختيار نوع المستخدم
+            userTypeCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    userTypeCards.forEach(c => c.classList.remove('selected'));
+                    this.classList.add('selected');
+                    userTypeInput.value = this.dataset.type;
+                });
+            });
+            
+            // التحقق من كلمة المرور أثناء الكتابة
+            const passwordInput = document.getElementById('registerPassword');
+            passwordInput.addEventListener('input', function() {
+                const requirements = AuthUtils.validatePasswordRequirements(this.value);
+                
+                // تحديث أيقونات المتطلبات
+                document.getElementById('reqLength').classList.toggle('valid', requirements.length);
+                document.getElementById('reqLength').classList.toggle('invalid', !requirements.length);
+                
+                document.getElementById('reqUppercase').classList.toggle('valid', requirements.uppercase);
+                document.getElementById('reqUppercase').classList.toggle('invalid', !requirements.uppercase);
+                
+                document.getElementById('reqLowercase').classList.toggle('valid', requirements.lowercase);
+                document.getElementById('reqLowercase').classList.toggle('invalid', !requirements.lowercase);
+                
+                document.getElementById('reqNumber').classList.toggle('valid', requirements.number);
+                document.getElementById('reqNumber').classList.toggle('invalid', !requirements.number);
+                
+                document.getElementById('reqSpecial').classList.toggle('valid', requirements.special);
+                document.getElementById('reqSpecial').classList.toggle('invalid', !requirements.special);
+                
+                // تحديث الأيقونات
+                const updateIcon = (elementId, isValid) => {
+                    const element = document.getElementById(elementId);
+                    const icon = element.querySelector('i');
+                    icon.classList.toggle('fa-check-circle', isValid);
+                    icon.classList.toggle('fa-circle', !isValid);
+                    icon.classList.toggle('text-green-500', isValid);
+                    icon.classList.toggle('text-gray-400', !isValid);
+                };
+                
+                updateIcon('reqLength', requirements.length);
+                updateIcon('reqUppercase', requirements.uppercase);
+                updateIcon('reqLowercase', requirements.lowercase);
+                updateIcon('reqNumber', requirements.number);
+                updateIcon('reqSpecial', requirements.special);
+            });
+            
+            // التحقق من تطابق كلمة المرور
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            confirmPasswordInput.addEventListener('input', function() {
+                const password = passwordInput.value;
+                const confirm = this.value;
+                
+                if (confirm && password !== confirm) {
+                    this.classList.add('border-red-500');
+                    document.getElementById('confirmPasswordError').textContent = 'كلمة المرور غير متطابقة';
+                    document.getElementById('confirmPasswordError').classList.remove('hidden');
+                } else {
+                    this.classList.remove('border-red-500');
+                    document.getElementById('confirmPasswordError').classList.add('hidden');
+                }
+            });
+            
+            // التبديل بين الخطوات
+            document.getElementById('nextStep1').addEventListener('click', function() {
+                // التحقق من الخطوة 1
+                const form = document.getElementById('registerForm');
+                const errors = validator.validateRegisterStep1(form);
+                
+                if (Object.keys(errors).length > 0) {
+                    validator.displayErrors(errors);
+                    return;
+                }
+                
+                // عرض رقم الهاتف للتحقق
+                const phone = document.getElementById('phone').value;
+                const countryCode = document.getElementById('countryCode').value;
+                phoneDisplay.textContent = countryCode + ' ' + phone;
+                
+                // الانتقال للخطوة 2
+                goToStep(2);
+                
+                // إرسال رمز التحقق
+                sendVerificationCode();
+            });
+            
+            document.getElementById('prevStep2').addEventListener('click', function() {
+                goToStep(1);
+            });
+            
+            document.getElementById('nextStep2').addEventListener('click', function() {
+                // التحقق من صحة الرمز
+                const code = Array.from(verificationInputs)
+                    .map(input => input.value)
+                    .join('');
+                
+                if (code.length !== 6) {
+                    showErrorMessage('الرجاء إدخال رمز التحقق المكون من 6 أرقام');
+                    return;
+                }
+                
+                // التحقق من الرمز
+                verifyCode(code);
+            });
+            
+            // التحقق من خلال البريد الإلكتروني
+            document.getElementById('verifyEmail').addEventListener('click', function() {
+                const email = document.getElementById('registerEmail').value;
+                
+                AuthAPI.sendEmailVerification(email)
+                    .then(response => {
+                        showSuccessMessage('تم إرسال رابط التحقق إلى بريدك الإلكتروني');
+                    })
+                    .catch(error => {
+                        showErrorMessage('فشل إرسال رابط التحقق: ' + error.message);
+                    });
+            });
+            
+            // إعادة إرسال الرمز
+            resendCodeBtn.addEventListener('click', function() {
+                if (!this.disabled) {
+                    sendVerificationCode();
+                    startCountdown();
+                }
+            });
+            
+            // إدخال رمز التحقق
+            verificationInputs.forEach((input, index) => {
+                input.addEventListener('input', function() {
+                    // التحرك للخانة التالية تلقائياً
+                    if (this.value.length === 1 && index < verificationInputs.length - 1) {
+                        verificationInputs[index + 1].focus();
+                    }
+                    
+                    // تحديث نمط الخانة
+                    this.classList.toggle('filled', this.value.length === 1);
+                    
+                    // التحقق التلقائي عند اكتمال الرمز
+                    const code = Array.from(verificationInputs)
+                        .map(input => input.value)
+                        .join('');
+                    
+                    if (code.length === 6) {
+                        verifyCode(code);
+                    }
+                });
+                
+                // التعامل مع مفتاح Backspace
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Backspace' && !this.value && index > 0) {
+                        verificationInputs[index - 1].focus();
+                    }
+                });
+            });
+            
+            // دوال المساعدة
+            function goToStep(step) {
+                if (step < 1 || step > totalSteps) return;
+                
+                // إخفاء الخطوة الحالية
+                stepContents.forEach(content => {
+                    content.classList.remove('active');
+                    content.classList.add('hidden');
+                });
+                
+                // تحديث مؤشرات الخطوات
+                stepIndicators.forEach((indicator, index) => {
+                    const circle = indicator.querySelector('div');
+                    const text = indicator.querySelector('span');
+                    
+                    if (index + 1 === step) {
+                        // الخطوة النشطة
+                        circle.classList.remove('bg-gray-200', 'text-gray-600');
+                        circle.classList.add('bg-green-500', 'text-white');
+                        text.classList.remove('text-gray-500');
+                        text.classList.add('text-green-600');
+                    } else if (index + 1 < step) {
+                        // الخطوات المكتملة
+                        circle.classList.remove('bg-gray-200', 'text-gray-600');
+                        circle.classList.add('bg-green-500', 'text-white');
+                        text.classList.remove('text-gray-500');
+                        text.classList.add('text-green-600');
+                    } else {
+                        // الخطوات المستقبلية
+                        circle.classList.remove('bg-green-500', 'text-white');
+                        circle.classList.add('bg-gray-200', 'text-gray-600');
+                        text.classList.remove('text-green-600');
+                        text.classList.add('text-gray-500');
+                    }
+                });
+                
+                // إظهار الخطوة الجديدة
+                const stepElement = document.getElementById(`step-${step}`);
+                if (stepElement) {
+                    stepElement.classList.remove('hidden');
+                    stepElement.classList.add('active');
+                }
+                
+                currentStep = step;
+                
+                // إذا كانت الخطوة 3، تعبئة معلومات الحساب
+                if (step === 3) {
+                    fillAccountInfo();
+                }
+            }
+            
+            function sendVerificationCode() {
+                const phone = document.getElementById('phone').value;
+                const countryCode = document.getElementById('countryCode').value;
+                const fullPhone = countryCode + phone;
+                
+                AuthAPI.sendVerificationCode(fullPhone)
+                    .then(response => {
+                        showSuccessMessage('تم إرسال رمز التحقق إلى هاتفك');
+                        startCountdown();
+                    })
+                    .catch(error => {
+                        showErrorMessage('فشل إرسال رمز التحقق: ' + error.message);
+                    });
+            }
+            
+            function startCountdown() {
+                clearInterval(countdownTimer);
+                countdownSeconds = 60;
+                resendCodeBtn.disabled = true;
+                
+                countdownTimer = setInterval(() => {
+                    countdownSeconds--;
+                    countdownElement.textContent = countdownSeconds;
+                    
+                    if (countdownSeconds <= 0) {
+                        clearInterval(countdownTimer);
+                        resendCodeBtn.disabled = false;
+                        countdownElement.textContent = 'إعادة إرسال';
+                    }
+                }, 1000);
+            }
+            
+            function verifyCode(code) {
+                const phone = document.getElementById('phone').value;
+                const countryCode = document.getElementById('countryCode').value;
+                const fullPhone = countryCode + phone;
+                
+                AuthAPI.verifyCode(fullPhone, code)
+                    .then(response => {
+                        showSuccessMessage('تم التحقق بنجاح!');
+                        
+                        // إنشاء الحساب
+                        createAccount();
+                    })
+                    .catch(error => {
+                        showErrorMessage('رمز التحقق غير صحيح');
+                        
+                        // إعادة تعيين الحقول
+                        verificationInputs.forEach(input => {
+                            input.value = '';
+                            input.classList.remove('filled');
+                        });
+                        verificationInputs[0].focus();
+                    });
+            }
+            
+            function createAccount() {
+                const formData = {
+                    fullName: document.getElementById('fullName').value,
+                    email: document.getElementById('registerEmail').value,
+                    phone: document.getElementById('countryCode').value + document.getElementById('phone').value,
+                    city: document.getElementById('city').value,
+                    userType: document.getElementById('userType').value,
+                    password: document.getElementById('registerPassword').value
+                };
+                
+                AuthAPI.register(formData)
+                    .then(response => {
+                        // الانتقال للخطوة 3
+                        goToStep(3);
+                    })
+                    .catch(error => {
+                        showErrorMessage('فشل إنشاء الحساب: ' + error.message);
+                    });
+            }
+            
+            function fillAccountInfo() {
+                accountName.textContent = document.getElementById('fullName').value;
+                accountEmail.textContent = document.getElementById('registerEmail').value;
+                
+                const userType = document.getElementById('userType').value;
+                const typeNames = {
+                    'buyer': 'مشتري',
+                    'seller': 'بائع',
+                    'both': 'بائع ومشتري'
+                };
+                accountType.textContent = typeNames[userType] || userType;
+            }
+            
+            function showSuccessMessage(message) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'fixed top-4 right-4 z-50 px-6 py-3 bg-green-500 text-white rounded-lg shadow-lg animate__animated animate__fadeInDown';
+                messageDiv.innerHTML = `
+                    <div class="flex items-center">
+                        <i class="fas fa-check-circle mr-3"></i>
+                        <span>${message}</span>
+                    </div>
+                `;
+                document.body.appendChild(messageDiv);
+                
+                setTimeout(() => {
+                    messageDiv.classList.add('animate__fadeOutUp');
+                    setTimeout(() => messageDiv.remove(), 300);
+                }, 3000);
+            }
+            
+            function showErrorMessage(message) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'fixed top-4 right-4 z-50 px-6 py-3 bg-red-500 text-white rounded-lg shadow-lg animate__animated animate__fadeInDown';
+                messageDiv.innerHTML = `
+                    <div class="flex items-center">
+                        <i class="fas fa-exclamation-circle mr-3"></i>
+                        <span>${message}</span>
+                    </div>
+                `;
+                document.body.appendChild(messageDiv);
+                
+                setTimeout(() => {
+                    messageDiv.classList.add('animate__fadeOutUp');
+                    setTimeout(() => messageDiv.remove(), 300);
+                }, 3000);
+            }
+            
+            // بدء العد التنازلي عند تحميل الصفحة
+            startCountdown();
+        });
+    </script>
+</body>
+</html>

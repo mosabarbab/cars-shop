@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول - سوق السيارات</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    
+    <style>
+        .auth-bg {
+            background: linear-gradient(135deg, 
+                rgba(37, 99, 235, 0.9) 0%, 
+                rgba(124, 58, 237, 0.9) 100%),
+                url('../assets/auth-bg/car-login.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        
+        .auth-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        .input-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+            transition: color 0.3s ease;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 16px 20px 16px 60px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .form-input:focus + .input-icon {
+            color: #3b82f6;
+        }
+        
+        .auth-divider {
+            position: relative;
+            text-align: center;
+            margin: 2rem 0;
+        }
+        
+        .auth-divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 0;
+            left: 0;
+            height: 1px;
+            background: #e5e7eb;
+        }
+        
+        .auth-divider span {
+            position: relative;
+            background: white;
+            padding: 0 20px;
+            color: #6b7280;
+            font-size: 14px;
+        }
+        
+        .social-login-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            background: white;
+            color: #374151;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .social-login-btn:hover {
+            border-color: #3b82f6;
+            transform: translateY(-2px);
+        }
+        
+        .password-toggle {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #6b7280;
+            cursor: pointer;
+        }
+        
+        .password-toggle:hover {
+            color: #374151;
+        }
+        
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .security-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
+        .floating-element {
+            animation: floating 6s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(2deg); }
+        }
+        
+        .progress-bar {
+            height: 4px;
+            background: #e5e7eb;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #3b82f6);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body class="auth-bg min-h-screen flex items-center justify-center p-4">
+    
+    <!-- شارة الأمان -->
+    <div class="security-badge animate__animated animate__fadeInDown">
+        <i class="fas fa-shield-alt mr-2"></i>نظام آمن مشفر
+    </div>
+    
+    <!-- العناصر العائمة -->
+    <div class="floating-element absolute top-20 right-1/4 w-64 h-64 bg-blue-400/20 rounded-full mix-blend-overlay filter blur-3xl"></div>
+    <div class="floating-element absolute bottom-20 left-1/4 w-64 h-64 bg-purple-400/20 rounded-full mix-blend-overlay filter blur-3xl" style="animation-delay: 2s;"></div>
+    
+    <!-- بطاقة المصادقة -->
+    <div class="auth-card rounded-2xl w-full max-w-md animate__animated animate__fadeInUp">
+        <!-- الشعار والترحيب -->
+        <div class="p-8 text-center border-b">
+            <div class="w-20 h-20 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+                <i class="fas fa-car text-white text-3xl"></i>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">مرحباً بعودتك!</h1>
+            <p class="text-gray-600">سجّل الدخول للوصول إلى حسابك</p>
+        </div>
+        
+        <!-- نموذج تسجيل الدخول -->
+        <div class="p-8">
+            <form id="loginForm" class="space-y-6">
+                <!-- البريد الإلكتروني -->
+                <div class="input-group">
+                    <input type="email" 
+                           id="email"
+                           name="email"
+                           placeholder="البريد الإلكتروني"
+                           required
+                           class="form-input">
+                    <i class="input-icon fas fa-envelope"></i>
+                    <div class="text-red-500 text-sm mt-1 hidden" id="emailError"></div>
+                </div>
+                
+                <!-- كلمة المرور -->
+                <div class="input-group">
+                    <input type="password" 
+                           id="password"
+                           name="password"
+                           placeholder="كلمة المرور"
+                           required
+                           minlength="8"
+                           class="form-input">
+                    <i class="input-icon fas fa-lock"></i>
+                    <button type="button" class="password-toggle" id="togglePassword">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <div class="text-red-500 text-sm mt-1 hidden" id="passwordError"></div>
+                    
+                    <!-- شدة كلمة المرور -->
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="passwordStrength" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <!-- تذكرني ونسيت كلمة المرور -->
+                <div class="remember-forgot">
+                    <label class="flex items-center cursor-pointer">
+                        <input type="checkbox" name="remember" class="h-5 w-5 text-blue-600 rounded border-gray-300">
+                        <span class="mr-3 text-gray-700">تذكرني</span>
+                    </label>
+                    <a href="forgot-password.html" class="text-blue-600 hover:text-blue-800 font-medium transition">
+                        نسيت كلمة المرور؟
+                    </a>
+                </div>
+                
+                <!-- زر تسجيل الدخول -->
+                <button type="submit" 
+                        id="loginButton"
+                        class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4 rounded-xl font-bold hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 active:scale-95">
+                    <span id="loginText">تسجيل الدخول</span>
+                    <span id="loginLoading" class="hidden">
+                        <i class="fas fa-spinner fa-spin ml-2"></i> جارٍ التحقق...
+                    </span>
+                </button>
+                
+                <!-- فاصل -->
+                <div class="auth-divider">
+                    <span>أو الدخول باستخدام</span>
+                </div>
+                
+                <!-- الدخول عبر منصات التواصل -->
+                <div class="grid grid-cols-2 gap-4">
+                    <button type="button" class="social-login-btn google-login">
+                        <i class="fab fa-google text-red-500 ml-2"></i>
+                        Google
+                    </button>
+                    <button type="button" class="social-login-btn apple-login">
+                        <i class="fab fa-apple text-gray-800 ml-2"></i>
+                        Apple
+                    </button>
+                </div>
+                
+                <!-- تسجيل الدخول بخطوة واحدة -->
+                <div class="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                    <div class="flex items-center">
+                        <i class="fas fa-mobile-alt text-blue-600 text-xl ml-3"></i>
+                        <div class="flex-1">
+                            <div class="font-medium text-blue-800">تسجيل الدخول بخطوة واحدة</div>
+                            <div class="text-blue-600 text-sm">استخدم رمز التحقق المرسل لجوالك</div>
+                        </div>
+                        <button type="button" id="oneTapLogin" class="text-blue-600 hover:text-blue-800 font-medium">
+                            تفعيل
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- روابط إضافية -->
+                <div class="text-center pt-6 border-t">
+                    <p class="text-gray-600">
+                        ليس لديك حساب؟ 
+                        <a href="register.html" class="text-blue-600 hover:text-blue-800 font-medium transition">
+                            أنشئ حساباً جديداً
+                        </a>
+                    </p>
+                </div>
+            </form>
+        </div>
+        
+        <!-- تذييل البطاقة -->
+        <div class="p-6 border-t bg-gray-50 rounded-b-2xl">
+            <div class="flex items-center justify-center space-x-6 text-gray-500 text-sm">
+                <a href="#" class="hover:text-blue-600 transition">الشروط والأحكام</a>
+                <a href="#" class="hover:text-blue-600 transition">سياسة الخصوصية</a>
+                <a href="#" class="hover:text-blue-600 transition">المساعدة</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- JavaScript -->
+    <script src="../js/auth-validation.js"></script>
+    <script src="../js/auth-utils.js"></script>
+    <script src="../js/auth-main.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            const loginButton = document.getElementById('loginButton');
+            const loginText = document.getElementById('loginText');
+            const loginLoading = document.getElementById('loginLoading');
+            const togglePassword = document.getElementById('togglePassword');
+            const passwordInput = document.getElementById('password');
+            const oneTapLogin = document.getElementById('oneTapLogin');
+            const passwordStrength = document.getElementById('passwordStrength');
+            
+            // تهيئة Validation
+            const validator = new AuthValidator();
+            
+            // عرض/إخفاء كلمة المرور
+            togglePassword.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.querySelector('i').classList.toggle('fa-eye');
+                this.querySelector('i').classList.toggle('fa-eye-slash');
+            });
+            
+            // التحقق من شدة كلمة المرور أثناء الكتابة
+            passwordInput.addEventListener('input', function() {
+                const strength = AuthUtils.checkPasswordStrength(this.value);
+                passwordStrength.style.width = strength.percentage + '%';
+                passwordStrength.style.background = strength.color;
+            });
+            
+            // تسجيل الدخول بخطوة واحدة
+            oneTapLogin.addEventListener('click', function() {
+                const phone = prompt('أدخل رقم هاتفك المحمول:');
+                if (phone && AuthUtils.validatePhone(phone)) {
+                    // إرسال رمز التحقق
+                    AuthAPI.sendOTP(phone)
+                        .then(response => {
+                            alert('تم إرسال رمز التحقق إلى هاتفك');
+                            // هنا يمكنك فتح نافذة لإدخال الرمز
+                        })
+                        .catch(error => {
+                            alert('فشل إرسال الرمز: ' + error.message);
+                        });
+                } else {
+                    alert('رقم الهاتف غير صالح');
+                }
+            });
+            
+            // إرسال نموذج تسجيل الدخول
+            loginForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                // التحقق من صحة البيانات
+                const errors = validator.validateLoginForm(this);
+                
+                if (Object.keys(errors).length > 0) {
+                    // عرض الأخطاء
+                    validator.displayErrors(errors);
+                    return;
+                }
+                
+                // جمع البيانات
+                const formData = {
+                    email: this.email.value.trim(),
+                    password: this.password.value,
+                    remember: this.remember.checked
+                };
+                
+                // عرض حالة التحميل
+                loginText.classList.add('hidden');
+                loginLoading.classList.remove('hidden');
+                loginButton.disabled = true;
+                
+                try {
+                    // محاكاة اتصال API
+                    const response = await AuthAPI.login(formData);
+                    
+                    // نجاح تسجيل الدخول
+                    showSuccessMessage('تم تسجيل الدخول بنجاح!');
+                    
+                    // حفظ بيانات المستخدم
+                    AuthUtils.saveUserData(response.user);
+                    
+                    // إعادة التوجيه بعد تأخير قصير
+                    setTimeout(() => {
+                        window.location.href = '../dashboard.html';
+                    }, 1500);
+                    
+                } catch (error) {
+                    // فشل تسجيل الدخول
+                    showErrorMessage(error.message || 'فشل تسجيل الدخول');
+                    
+                    // إعادة تعيين الزر
+                    loginText.classList.remove('hidden');
+                    loginLoading.classList.add('hidden');
+                    loginButton.disabled = false;
+                }
+            });
+            
+            // الدخول باستخدام Google
+            document.querySelector('.google-login').addEventListener('click', function() {
+                // محاكاة تسجيل الدخول باستخدام Google
+                AuthAPI.googleLogin()
+                    .then(response => {
+                        showSuccessMessage('تم تسجيل الدخول باستخدام Google');
+                        AuthUtils.saveUserData(response.user);
+                        setTimeout(() => window.location.href = '../dashboard.html', 1000);
+                    })
+                    .catch(error => {
+                        showErrorMessage('فشل تسجيل الدخول باستخدام Google');
+                    });
+            });
+            
+            // الدخول باستخدام Apple
+            document.querySelector('.apple-login').addEventListener('click', function() {
+                // محاكاة تسجيل الدخول باستخدام Apple
+                AuthAPI.appleLogin()
+                    .then(response => {
+                        showSuccessMessage('تم تسجيل الدخول باستخدام Apple');
+                        AuthUtils.saveUserData(response.user);
+                        setTimeout(() => window.location.href = '../dashboard.html', 1000);
+                    })
+                    .catch(error => {
+                        showErrorMessage('فشل تسجيل الدخول باستخدام Apple');
+                    });
+            });
+            
+            // دوال الرسائل
+            function showSuccessMessage(message) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'fixed top-4 right-4 z-50 px-6 py-3 bg-green-500 text-white rounded-lg shadow-lg animate__animated animate__fadeInDown';
+                messageDiv.innerHTML = `
+                    <div class="flex items-center">
+                        <i class="fas fa-check-circle mr-3"></i>
+                        <span>${message}</span>
+                    </div>
+                `;
+                document.body.appendChild(messageDiv);
+                
+                setTimeout(() => {
+                    messageDiv.classList.add('animate__fadeOutUp');
+                    setTimeout(() => messageDiv.remove(), 300);
+                }, 3000);
+            }
+            
+            function showErrorMessage(message) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'fixed top-4 right-4 z-50 px-6 py-3 bg-red-500 text-white rounded-lg shadow-lg animate__animated animate__fadeInDown';
+                messageDiv.innerHTML = `
+                    <div class="flex items-center">
+                        <i class="fas fa-exclamation-circle mr-3"></i>
+                        <span>${message}</span>
+                    </div>
+                `;
+                document.body.appendChild(messageDiv);
+                
+                setTimeout(() => {
+                    messageDiv.classList.add('animate__fadeOutUp');
+                    setTimeout(() => messageDiv.remove(), 300);
+                }, 3000);
+            }
+            
+            // التحقق من جلسة سابقة
+            if (AuthUtils.checkExistingSession()) {
+                showInfoMessage('جلسة سابقة موجودة، سيتم إعادة التوجيه...');
+                setTimeout(() => {
+                    window.location.href = '../dashboard.html';
+                }, 2000);
+            }
+        });
+    </script>
+</body>
+</html>
